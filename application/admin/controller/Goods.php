@@ -72,9 +72,10 @@ class Goods extends Common
             'm'             => $page->GetPageStarNumber(),
             'n'             => $this->page_size,
             'order_by'      => $this->form_order_by['data'],
-            'is_category'   => 1,
+			'is_category'   => 1,
+			'is_admin'      => 1,
         ];
-        $ret = GoodsService::GoodsList($data_params);
+        $ret = GoodsService::GoodsList($data_params, $this->admin);
 
         // 基础参数赋值
 		$this->assign('params', $this->data_request);
@@ -107,9 +108,10 @@ class Goods extends Common
                 'where'             => $where,
                 'is_photo'          => 1,
                 'is_content_app'    => 1,
-                'is_category'       => 1,
+				'is_category'       => 1,
+				'is_admin'          => 1,
             ];
-            $ret = GoodsService::GoodsList($data_params);
+            $ret = GoodsService::GoodsList($data_params, $this->admin);
             $data = [];
             if(!empty($ret['data']) && !empty($ret['data'][0]))
             {
@@ -163,8 +165,9 @@ class Goods extends Common
 				'is_photo'			=> 1,
 				'is_content_app'	=> 1,
 				'is_category'		=> 1,
+				'is_admin'          => 1,
 			];
-			$ret = GoodsService::GoodsList($data_params);
+			$ret = GoodsService::GoodsList($data_params, $this->admin);
 			if(empty($ret['data'][0]))
 			{
 				return $this->error('商品信息不存在', MyUrl('admin/goods/index'));
@@ -195,8 +198,9 @@ class Goods extends Common
 
         // 站点类型
         $this->assign('common_site_type_list', lang('common_site_type_list'));
-        // 当前系统设置的站点类型
-        $this->assign('common_site_type', MyC('common_site_type', 0, true));
+		// 当前系统设置的站点类型
+		$site_type = MyC('common_site_type', 0, true);
+		$this->assign('common_site_type', $site_type);
 
         // 商品参数类型
         $this->assign('common_goods_parameters_type_list', lang('common_goods_parameters_type_list'));
@@ -235,7 +239,12 @@ class Goods extends Common
 		unset($params['id'], $params['is_copy']);
 		$this->assign('data', $data);
 		$this->assign('params', $params);
-		return $this->fetch();
+
+		$template = "";
+		if($site_type == 3) {
+			$template = "save_info_".$site_type;
+		}
+		return $this->fetch($template);
 	}
 
 	/**

@@ -58,7 +58,7 @@ class Goods extends Common
             'is_spec'   => true,
             'is_params' => true,
         ];
-        $ret = GoodsService::GoodsList($params);
+        $ret = GoodsService::GoodsList($params, $this->user);
         if(empty($ret['data'][0]) || $ret['data'][0]['is_delete_time'] != 0)
         {
             $this->assign('msg', '资源不存在或已被删除');
@@ -120,7 +120,7 @@ class Goods extends Common
                 'field'     => 'id,title,title_color,price,images',
                 'n'         => 10,
             ];
-            $right_goods = GoodsService::GoodsList($params);
+            $right_goods = GoodsService::GoodsList($params, $this->user);
             $this->assign('left_goods', $right_goods['data']);
 
             // 详情tab商品 猜你喜欢
@@ -134,7 +134,7 @@ class Goods extends Common
                 'field'     => 'id,title,title_color,price,images',
                 'n'         => 16,
             ];
-            $like_goods = GoodsService::GoodsList($params);
+            $like_goods = GoodsService::GoodsList($params, $this->user);
             $this->assign('detail_like_goods', $like_goods['data']);
 
             // 站点类型 - 展示型模式操作名称

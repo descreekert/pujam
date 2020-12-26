@@ -627,5 +627,85 @@ class ResourcesService
         $res = self::CurrencyData();
         return empty($res['currency_symbol']) ? config('shopxo.currency_symbol') : $res['currency_symbol'];
     }
+
+    /**
+     * 图片附件，复制并裁剪
+     * @author   Descreekert
+     * @version  1.0.0
+     * @datetime 2019-06-25T00:13:33+0800
+     * @param    String         $url [原始图片url]
+     */
+    public static function AttachmentImageCropCopy($url)
+    {
+        $preview = [];
+        // 搜索原始附件图片
+        $attach = Db::name('Attachment')->where(['url'=>$url])->select();
+        if(empty($attach)) {
+            return $preview;
+        }
+        $original = $attach[0];
+
+        // 取得原始图片数据
+        $org_file = GetDocumentRoot() . __MY_ROOT_PUBLIC__.$url;
+        $ext = $original['ext'];
+        $new_title = date('YmdHis').str_shuffle(rand()).$ext;
+        $new_url = substr($url, 0, strripos($url, '/') + 1) . $new_title;
+        $new_file = GetDocumentRoot() . __MY_ROOT_PUBLIC__.$new_url;
+
+        // 生成预览图/裁剪图
+        $ic = \base\Images::ImageCrop($org_file, $ext, $new_file);
+        if(!$ic) {
+            return $preview;
+        }
+
+        // 数据组装
+        $preview = [
+            'title'         => $new_title,
+            'original'      => $original['original'],
+            'path_type'     => $original['path_type'],
+            'ext'           => $ext,
+            'type'          => $original['type'],
+            'url'           => $new_url,
+            'size'          => file_exists($new_file) ? filesize($new_file) : 0,
+            'hash'          => file_exists($new_file) ? hash_file('sha256', $new_file, false) : '',
+        ];
+        return $preview;
+    }
+
+     /**
+     * 附件图片同步（添加或更新剪切图）
+     * @author  descreekert
+     * @version 1.0.0
+     * @date    2020-12-22
+     * @desc    description
+     * @param   [array]          $data     [数据]
+     * @return  [array]                    [boolean | msg]
+     */
+    public static function AttachmentImageSync($data)
+    {
+        if(!empty($data))
+        {
+            foreach($data as $k=>$v)
+            {
+                // 查询是否已存在预览图/裁剪图
+                $attach_preview = Db::name('AttachmentPreview')->where(['original_url'=>$v])->select();
+                if(empty($attach_preview)) {
+                    // 预览图不存在，生成预览图
+                    $preview = self::AttachmentImageCropCopy($v);
+                    if(empty($preview )){
+                        return DataReturn('附件图片同步失败--生成预览图失败', -1);
+                    }
+                    // 并添加到附件表
+                    $ret = self::AttachmentAdd($preview);
+                    if($ret['code'] != 0)
+                    {
+                        return DataReturn('附件图片同步失败--添加预览图到附件表失败', -1);
+                    }
+                } 
+            }
+        }
+        return DataReturn('附件图片同步成功', 0);
+    }
+
 }
 ?>

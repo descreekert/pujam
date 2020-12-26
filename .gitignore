@@ -9,3 +9,5 @@
 nginx.htaccess
 *payment_*_respond.php
 *payment_*_notify.php
+.vscode/launch.json
+.gitignore

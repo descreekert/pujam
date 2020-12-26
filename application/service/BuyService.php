@@ -511,7 +511,7 @@ class BuyService
                 'is_delete_time'    => 0,
                 'is_shelves'        => 1,
             ],
-            'field' => 'id, id AS goods_id, title, images, inventory_unit, buy_min_number, buy_max_number, model',
+            'field' => 'id, id AS goods_id, title, images, inventory_unit, buy_min_number, buy_max_number, model, price',
         ];
         $ret = GoodsService::GoodsList($p);
         if(empty($ret['data'][0]))

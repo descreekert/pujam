@@ -460,5 +460,109 @@ class Images
 		}
 		return $content;
 	}
+
+	/**
+	 * [ImageCrop 图片裁剪]
+	 * @param  [string] $org_file  [原图片地址]
+	 * @param  [string] $type  [类型]
+	 * @param  [string] $new_file  [新图片地址]
+	 * @param  [int] 	$width [指定图片宽度]
+	 * @param  [int] 	$height[指定图片高度]
+	 * @return [boolean] 	   [成功true, 失败false]
+	 */
+	public static function ImageCrop($org_file, $type, $new_file, $width=0, $height=0)
+	{
+		/* 获取图片原本尺寸 */
+		list($w, $h) = getimagesize($org_file);
+		
+		/* 尺寸计算 */
+		$percent = 0.5;
+		if($width > 0) {
+			$width = ($w > $width) ? $width : $w;
+		} else {
+			$width = $w;
+		}
+		if($height > 0) {
+			$height = ($h > $height) ? $height : $h;
+		} else {
+			$height = $h * $percent;
+		}
+	
+		/* url创建一个新图象 */
+		switch($type)
+	    {
+	        case 'gif':
+	            $src_im = @imagecreatefromgif($org_file);
+	            break;
+	        case 'png':
+	            $src_im = @imagecreatefrompng($org_file);
+	            break;
+	        default:
+	            $src_im = @imagecreatefromjpeg($org_file);
+	    }
+		if(!$src_im) return false;
+		
+		/* 生成新图片 */
+		$dst_im = imagecrop($src_im, ['x' => 0, 'y' => 0, 'width' => $width, 'height' => $height]);
+
+	    if(!$dst_im) {
+			imagedestroy($src_im);
+			return false;
+		}
+
+		/* 添加文字水印 */
+		self::ImageWaterText($dst_im);
+
+	    /* 保存新图片 */
+		switch($type)
+		{
+			case 'png':
+				imagepng($dst_im, $new_file);
+				break;
+			case 'gif':
+				imagegif($dst_im, $new_file);
+				break;
+			default:
+				imagejpeg($dst_im, $new_file);
+		}
+		
+		imagedestroy($dst_im);
+		imagedestroy($src_im);
+		
+		return true;
+	}
+
+	/**
+	 * [ImageWaterText 图片添加文字]
+	 * @param  [string] $im    [GD图片对象]
+	 * @param  [string] $type  [类型]
+	 * @param  [string] $new_file  [新图片地址]
+	 * @param  [int] 	$width [指定图片宽度]
+	 * @param  [int] 	$height[指定图片高度]
+	 * @return [boolean] 	   [成功true, 失败false]
+	 */
+	public static function ImageWaterText($image, $text='') 
+	{
+		// 字体文件
+		$font_file = GetDocumentRoot() . __MY_ROOT_PUBLIC__.'static/common/typeface/Alibaba-PuHuiTi-Regular.ttf';
+		// 水印文字
+		$text = empty($text) ? MyC('home_site_name')."预览图|Preview" : $text;
+		// 字体大小
+		$font_size = 30;
+		// 水印文字旋转角度
+		$text_angle = 45;
+
+		// 水印位置
+		$box = @imageTTFBbox($font_size,$text_angle,$font_file,$text);
+		$width = abs($box[4] - $box[0]);
+		$heigth = abs($box[5] - $box[1]);
+		$x = @imagesx($image)/2 -$width/2;
+		$y = @imagesy($image)/2 +$heigth/2;
+		// 水印颜色
+		$text_color = imagecolorallocatealpha($image, 0, 0, 255, 75); 
+
+		imagettftext($image, $font_size, $text_angle, $x, $y, $text_color, $font_file, $text);
+
+	}
 }
 ?>

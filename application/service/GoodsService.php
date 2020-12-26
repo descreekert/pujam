@@ -438,7 +438,7 @@ class GoodsService
      * @param    [array]                   $data   [商品列表]
      * @param    [array]                   $params [输入参数]
      */
-    public static function GoodsDataHandle($data, $params = [])
+    public static function GoodsDataHandle($data, $params = [], $user = [])
     {
         if(!empty($data))
         {
@@ -449,6 +449,7 @@ class GoodsService
             $is_category = (isset($params['is_category']) && $params['is_category'] == true) ? true : false;
             $is_params = (isset($params['is_params']) && $params['is_params'] == true) ? true : false;
             $data_key_field = empty($params['data_key_field']) ? 'id' : $params['data_key_field'];
+            $is_admin =  (isset($params['is_admin']) && $params['is_admin'] == true) ? true : false;
 
             // 开始处理数据
             foreach($data as &$v)
@@ -494,6 +495,7 @@ class GoodsService
                     {
                         foreach($v['photo'] as &$vs)
                         {
+                            $vs['images'] = self::GoodImagePreviewHandle($data_id, $vs['images'], $user, $v['price'], $is_admin);
                             $vs['images_old'] = $vs['images'];
                             $vs['images'] = ResourcesService::AttachmentPathViewHandle($vs['images']);
                         }
@@ -509,6 +511,7 @@ class GoodsService
                         // 获取商品封面图片
                         $v['images'] = ResourcesService::AttachmentPathHandle(self::GoodsImagesCoverHandle($data_id, isset($v['photo']) ? $v['photo'] : []));
                     }
+                    $v['images'] = self::GoodImagePreviewHandle($data_id, $v['images'], $user, $v['price'], $is_admin);
                     $v['images_old'] = $v['images'];
                     $v['images'] = ResourcesService::AttachmentPathViewHandle($v['images']);
                 }
@@ -895,7 +898,7 @@ class GoodsService
      * @desc    description
      * @param   array           $params [输入参数: where, field, is_photo]
      */
-    public static function GoodsList($params = [])
+    public static function GoodsList($params = [], $user = [])
     {
         $where = empty($params['where']) ? [] : $params['where'];
         $field = empty($params['field']) ? '*' : $params['field'];
@@ -918,7 +921,7 @@ class GoodsService
 
         $data = Db::name('Goods')->field($field)->where($where)->order($order_by)->limit($m, $n)->select();
         
-        return self::GoodsDataHandle($data, $params);
+        return self::GoodsDataHandle($data, $params, $user);
     }
 
     /**
@@ -958,17 +961,17 @@ class GoodsService
                 'key_name'          => 'category_id',
                 'error_msg'         => '请至少选择一个商品分类',
             ],
-            [
-                'checked_type'      => 'length',
-                'key_name'          => 'inventory_unit',
-                'checked_data'      => '1,6',
-                'error_msg'         => '库存单位格式 1~6 个字符',
-            ],
-            [
-                'checked_type'      => 'empty',
-                'key_name'          => 'buy_min_number',
-                'error_msg'         => '请填写有效的最低起购数量',
-            ],
+            // [
+            //     'checked_type'      => 'length',
+            //     'key_name'          => 'inventory_unit',
+            //     'checked_data'      => '1,6',
+            //     'error_msg'         => '库存单位格式 1~6 个字符',
+            // ],
+            // [
+            //     'checked_type'      => 'empty',
+            //     'key_name'          => 'buy_min_number',
+            //     'error_msg'         => '请填写有效的最低起购数量',
+            // ],
             [
                 'checked_type'      => 'in',
                 'key_name'          => 'site_type',
@@ -998,6 +1001,16 @@ class GoodsService
                 'error_msg'         => 'SEO描述格式 最多230个字符',
             ],
         ];
+
+        $site_type = isset($params['site_type']) && $params['site_type'] > -1 ? $params['site_type'] : MyC('common_site_type', -1, true);
+        if($site_type != 3) {
+            $p[] = [
+                    'checked_type'      => 'length',
+                    'key_name'          => 'inventory_unit',
+                    'checked_data'      => '1,6',
+                    'error_msg'         => '库存单位格式 1~6 个字符',
+            ];
+        }
         $ret = ParamsChecked($params, $p);
         if($ret !== true)
         {
@@ -1055,9 +1068,9 @@ class GoodsService
             'title'                     => $params['title'],
             'title_color'               => empty($params['title_color']) ? '' : $params['title_color'],
             'simple_desc'               => $params['simple_desc'],
-            'model'                     => $params['model'],
+            'model'                     => empty($params['model'])? '' : $params['model'],
             'place_origin'              => isset($params['place_origin']) ? intval($params['place_origin']) : 0,
-            'inventory_unit'            => $params['inventory_unit'],
+            'inventory_unit'            => empty($params['inventory_unit'])? '' : $params['inventory_unit'],
             'give_integral'             => $give_integral,
             'buy_min_number'            => max(1, isset($params['buy_min_number']) ? intval($params['buy_min_number']) : 1),
             'buy_max_number'            => isset($params['buy_max_number']) ? intval($params['buy_max_number']) : 0,
@@ -1075,7 +1088,7 @@ class GoodsService
             'is_exist_many_spec'        => empty($specifications['data']['title']) ? 0 : 1,
             'spec_base'                 => empty($specifications_base['data']) ? '' : json_encode($specifications_base['data'], JSON_UNESCAPED_UNICODE),
             'fictitious_goods_value'    => $fictitious_goods_value,
-            'site_type'                 => isset($params['site_type']) ? $params['site_type'] : -1,
+            'site_type'                 => $site_type,
         ];
 
         // 商品保存处理钩子
@@ -1161,6 +1174,13 @@ class GoodsService
 
             // 仓库规格库存同步
             $ret = WarehouseGoodsService::GoodsSpecChangeInventorySync($goods_id);
+            if($ret['code'] != 0)
+            {
+                throw new \Exception($ret['msg']);
+            }
+
+            // 相册裁剪图（未购买可见）
+            $ret = ResourcesService::AttachmentImageSync($photo['data']);
             if($ret['code'] != 0)
             {
                 throw new \Exception($ret['msg']);
@@ -1395,7 +1415,8 @@ class GoodsService
                     return DataReturn('规格名称列之间不能重复['.implode(',', array_unique($repeat_names_all)).']', -1);
                 }
             } else {
-                if(empty($data[0][0]) || $data[0][0] <= 0)
+                // 允许价格为0, 免费商品
+                if(!isset($data[0][0]) || $data[0][0] < 0)
                 {
                     return DataReturn('请填写有效的规格销售价格', -1);
                 }
@@ -1656,6 +1677,9 @@ class GoodsService
             // 基础字段
             $count = count($data['data'][0]);
             $temp_key = ['price', 'weight', 'coding', 'barcode', 'original_price', 'extends'];
+            if(MyC('common_site_type', -1, true) == 3) {
+                $temp_key = ['price', 'original_price'];
+            }
             $key_count = count($temp_key);
 
             // 等于key总数则只有一列基础规格
@@ -2505,6 +2529,36 @@ class GoodsService
 
         // 创建二维码
         return (new \base\Qrcode())->Create($params);
+    }
+
+    /**
+     * 根据用户及商品购买状态，获取商品原始图或预览图/裁剪图
+     * @author  Descreekert
+     * @version 1.0.0
+     * @date    2020-12-23
+     * @desc    description
+     * @param   [int]             $goods_id [商品id]
+     * @param   [array]           $url      [原图url]
+     * @param   [array]           $user     [用户信息]
+     * @param   [int]             $price    [价格信息]
+     */
+    public static function GoodImagePreviewHandle($goods_id = 0, $url, $user = [], $price=0, $is_admin = false)
+    {
+        // 若售价为0元（免费）或当前为管理员，则显示原图
+        if(!$is_admin && $price >0) {
+            // 判断当前用户是否已购买产品
+            $ret = [];
+            if(!empty($user)) {
+                $ret = Db::name('UserGoods')->where(['goods_id'=>$goods_id, 'user_id'=>$user['id']])->select();
+            }
+
+            // 未购买，则显示预览图
+            if(empty($ret)) {
+                $preview_url = Db::name('AttachmentPreview')->where(['original_url'=>$url])->value('preview_url');
+                $url = isset($preview_url) ? $preview_url : $url;
+            }
+        }
+        return $url;
     }
 }
 ?>

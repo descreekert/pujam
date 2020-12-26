@@ -383,7 +383,7 @@
             <!-- 购买导航 -->
             <div class="buy-nav {{if $common_site_type eq 1}}exhibition-nav{{else /}}{{if isset($is_goods_site_type_consistent) and $is_goods_site_type_consistent neq 1}}site-type-not-consistent-nav{{/if}}{{/if}}">
                 {{if !empty($goods.is_shelves)}}
-                    {{if $goods['inventory'] gt 0}}
+                    {{if $goods['inventory'] gt 0 or Myc('common_site_type') eq 3}}
                         <div class="buy-nav-opt">
                             <a href="{{$Think.__MY_URL__}}">
                                 <span class="nav-icon nav-icon-home">
