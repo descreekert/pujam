@@ -344,7 +344,7 @@ class WarehouseGoodsService
         if($result['total'] > 0)
         {
             // 基础参数
-            $field = 'g.id,g.title,g.images';
+            $field = 'g.id,g.title,g.images,g.price';
             $order_by = 'g.id desc';
 
             // 分页计算
@@ -414,12 +414,13 @@ class WarehouseGoodsService
                 'is_enable'     => 1,
                 'add_time'      => time(),
             ];
-            if(Db::name('WarehouseGoods')->insertGetId($data) <= 0)
+            $id = Db::name('WarehouseGoods')->insertGetId($data);
+            if($id <= 0)
             {
                 return DataReturn('添加失败', -100);
             }
         }
-        return DataReturn('添加成功', 0);
+        return DataReturn('添加成功', 0, ['id' => $id]);
     }
 
     /**
@@ -1004,6 +1005,69 @@ class WarehouseGoodsService
         }
 
         return DataReturn('回滚成功', 0);
+    }
+
+     /**
+     * 仓库商品及库存添加(在线虚拟商品)
+     * @author  Devil
+     * @blog    http://gong.gg/
+     * @version 1.0.0
+     * @date    2020-07-14
+     * @desc    description
+     * @param   [array]           $params [输入参数]
+     */
+    public static function WarehouseGoodsAddOnline($goods_id)
+    {
+        $wp = [
+            "where" =>  [
+                'is_enable'         => 1,
+                'is_delete_time'    => 0,
+                'is_online'         => 1,
+            ],
+            "field" =>  ['id']
+        ];
+        // 获取当前可用线上仓库
+        $ws = WarehouseService::WarehouseList($wp);
+        if(!empty($ws)) {
+            $warehouse_id = $ws['data'][0]['id'];
+
+            // 添加当前虚拟商品到在线仓库
+            $warehouse_goods = [
+                'warehouse_id'  => $warehouse_id,
+                'goods_id'      => $goods_id,
+                'is_enable'     => 1,
+                'add_time'      => time(),
+            ];
+            $warehouse_goods_id = Db::name('WarehouseGoods')->insertGetId($warehouse_goods);
+            if($warehouse_goods_id <= 0) {
+                return DataReturn('商品添加到在线仓库失败', -100);
+            }
+            
+            // 获取仓库商品规格及库存信息
+            $str = 'default';
+            $inventory_spec = [
+                'name'      => '默认规格',
+                'spec'      => $str,
+                'md5_key'   => md5($str),
+                'inventory' => 9999,
+            ];
+
+            // 添加当前商品，在线上仓库中的默认规格库存
+            $data = [
+                'warehouse_goods_id'    => $warehouse_goods_id,
+                'warehouse_id'          => $warehouse_id,
+                'goods_id'              => $goods_id,
+                'md5_key'               => $inventory_spec['md5_key'],
+                'spec'                  => $inventory_spec['spec'],
+                'inventory'             => $inventory_spec['inventory'],
+                'add_time'              => time(),
+            ];
+            if(Db::name('WarehouseGoodsSpec')->insertGetId($data) <= 0){
+                return DataReturn('商品规格库存9999添加失败', -200);
+            }
+        }
+
+        return DataReturn('商品添加到在线仓库并设置库存9999成功', 0);
     }
 }
 ?>

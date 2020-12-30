@@ -125,6 +125,9 @@ class WarehouseService
                 'key_name'          => 'contacts_tel',
                 'error_msg'         => '联系电话不能为空',
             ],
+        ];
+
+        $op = [
             [
                 'checked_type'      => 'empty',
                 'key_name'          => 'province',
@@ -146,6 +149,12 @@ class WarehouseService
                 'error_msg'         => '详细地址不能为空',
             ],
         ];
+
+        $is_online = isset($params['is_online']) ? intval($params['is_online']) : 0;
+        if($is_online == 0) {
+            $p = array_merge($p, $op);
+        }
+
         $ret = ParamsChecked($params, $p);
         if($ret !== true)
         {
@@ -160,13 +169,14 @@ class WarehouseService
             'level'             => isset($params['level']) ? intval($params['level']) : 0,
             'contacts_name'     => $params['contacts_name'],
             'contacts_tel'      => $params['contacts_tel'],
-            'province'          => $params['province'],
-            'city'              => $params['city'],
-            'county'            => $params['county'],
-            'address'           => $params['address'],
+            'province'          => isset($params['province']) ? intval($params['province']) : 0,
+            'city'              => isset($params['city']) ? intval($params['city']) : 0,
+            'county'            => isset($params['county']) ? intval($params['county']) : 0,
+            'address'           => empty($params['alias']) ? '' : $params['address'],
             'lng'               => isset($params['lng']) ? floatval($params['lng']) : 0,
             'lat'               => isset($params['lat']) ? floatval($params['lat']) : 0,
             'is_default'        => $is_default,
+            'is_online'         => $is_online,
         ];
 
         Db::startTrans();

@@ -1547,6 +1547,7 @@ CREATE TABLE `s_warehouse` (
   `alias` char(60) NOT NULL DEFAULT '' COMMENT '别名',
   `level` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '权重（数字越大权重越高）',
   `is_enable` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否启用（0否，1是）',
+  `is_online` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否在线虚拟仓库（0否, 1是）',
   `contacts_name` char(60) NOT NULL DEFAULT '' COMMENT '联系人姓名',
   `contacts_tel` char(15) NOT NULL DEFAULT '' COMMENT '联系电话',
   `province` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '所在省',
@@ -1563,6 +1564,7 @@ CREATE TABLE `s_warehouse` (
   KEY `name` (`name`),
   KEY `level` (`level`),
   KEY `is_enable` (`is_enable`),
+  KEY `is_online` (`is_online`),
   KEY `is_default` (`is_default`),
   KEY `is_delete_time` (`is_delete_time`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='仓库';
@@ -1571,7 +1573,7 @@ CREATE TABLE `s_warehouse` (
 --  Records of `s_warehouse`
 -- ----------------------------
 BEGIN;
-INSERT INTO `s_warehouse` VALUES ('2', '默认仓库', '苏州仓', '23', '1', '龚福祥', '17666666655', '9', '155', '1936', '川沙新镇华川家园111号', '-1.1732520000', '-14.8172230000', '1', '0', '1594207406', '1602428921'), ('3', '上海仓库', '上海浦东', '0', '1', 'devil', '13222333333', '9', '155', '1937', '张江高科', '121.5942780000', '31.2079170000', '0', '0', '1594953987', '1606744797'), ('4', '测试2', '', '1', '0', 'devil', '17602128368', '1', '37', '568', 'chuanshaxinzhen huachuanjiayuanEEE', '116.4324270000', '39.9351300000', '0', '0', '1603892369', '1606802911');
+INSERT INTO `s_warehouse` VALUES ('1', '谱匠自营', '谱匠自营', '99', '1', '1','谱匠官网', '17666666655', '0', '0', '0', '在线仓库', '0', '0', '1', '0', '1594207406', '1602428921'),('2', '苏州仓库', '苏州仓', '23', '1', '0','龚福祥', '17666666655', '9', '155', '1936', '川沙新镇华川家园111号', '-1.1732520000', '-14.8172230000', '0', '0', '1594207406', '1602428921'), ('3', '上海仓库', '上海浦东', '0', '1', '0','devil', '13222333333', '9', '155', '1937', '张江高科', '121.5942780000', '31.2079170000', '0', '0', '1594953987', '1606744797'), ('4', '测试2', '', '1', '0', '0','devil', '17602128368', '1', '37', '568', 'chuanshaxinzhen huachuanjiayuanEEE', '116.4324270000', '39.9351300000', '0', '0', '1603892369', '1606802911');
 COMMIT;
 
 -- ----------------------------

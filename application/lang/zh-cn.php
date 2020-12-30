@@ -56,6 +56,12 @@ return array(
             0 => array('id' => 0, 'name' => '不启用'),
             1 => array('id' => 1, 'name' => '启用', 'checked' => true),
         ),
+    
+    // 是否线上
+    'common_is_online_list'               =>  array(
+        0 => array('id' => 0, 'name' => '线下实体'),
+        1 => array('id' => 1, 'name' => '线上虚拟', 'checked' => true),
+    ),
 
     // 是否显示
     'common_is_show_list'               =>  array(

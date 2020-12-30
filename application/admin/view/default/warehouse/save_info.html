@@ -32,18 +32,30 @@
                 <input type="text" name="contacts_tel" placeholder="电话" minlength="6" maxlength="30" data-validation-message="电话格式有误" class="am-radius" {{if !empty($data)}} value="{{$data.contacts_tel}}"{{/if}} required />
             </div>
 
-            {{include file="lib/region_linkage" /}}
+            {{assign name="is_online" value="0" /}}
+            {{if isset($data['is_online']) and $data['is_online'] eq 1}}
+                {{assign name="is_online" value="1" /}}
+            {{/if}}
+
             <div class="am-form-group">
-                <label>详细地址<span class="am-form-group-label-tips-must">必填</span></label>
-                <div class="am-input-group am-input-group-sm">
-                    <input type="hidden" name="lng" id="form-lng" {{if !empty($data)}} value="{{$data.lng}}"{{/if}} />
-                    <input type="hidden" name="lat" id="form-lat" {{if !empty($data)}} value="{{$data.lat}}"{{/if}} />
-                    <input type="text" name="address" id="form-address" placeholder="详细地址" minlength="2" maxlength="80" data-validation-message="详细地址格式 1~80 个字符之间" class="am-radius" {{if !empty($data)}} value="{{$data.address}}"{{/if}} required />
-                    <span class="am-input-group-btn">
-                        <button type="button" class="am-btn am-btn-default am-radius" id="map-location-submit"><span class="am-icon-map-marker"></span> 定位</button>
-                    </span>
+                <label class="block">是否线上</label>
+                <input name="is_online" value="1" type="checkbox" data-off-text="否" data-on-text="是" data-size="xs" data-on-color="success" data-off-color="default" data-handle-width="49" data-am-switch {{if $is_online eq 1}}checked="true"{{/if}} />
+            </div>
+
+            <div id="warehouse_address" {{if $is_online eq 1}}class="none"{{/if}}>
+                {{include file="lib/region_linkage" /}}
+                <div class="am-form-group">
+                    <label>详细地址<span class="am-form-group-label-tips-must">必填</span></label>
+                    <div class="am-input-group am-input-group-sm">
+                        <input type="hidden" name="lng" id="form-lng" {{if !empty($data)}} value="{{$data.lng}}"{{/if}} />
+                        <input type="hidden" name="lat" id="form-lat" {{if !empty($data)}} value="{{$data.lat}}"{{/if}} />
+                        <input type="text" name="address" id="form-address" placeholder="详细地址" minlength="2" maxlength="80" data-validation-message="详细地址格式 1~80 个字符之间" class="am-radius" {{if !empty($data)}} value="{{$data.address}}"{{/if}} required />
+                        <span class="am-input-group-btn">
+                            <button type="button" class="am-btn am-btn-default am-radius" id="map-location-submit"><span class="am-icon-map-marker"></span> 定位</button>
+                        </span>
+                    </div>
+                    <div id="map" data-level="17" class="am-margin-top-xs"></div>
                 </div>
-                <div id="map" data-level="17" class="am-margin-top-xs"></div>
             </div>
 
             <div class="am-form-group">
@@ -76,4 +88,31 @@ $(function()
     // 百度地图初始化
     MapInit({{if !empty($data['lng'])}}{{$data['lng']}}{{else /}}116.400244{{/if}},{{if !empty($data['lat'])}}{{$data['lat']}}{{else /}}39.92556{{/if}});
 });
+</script>
+<script type="text/javascript">
+    function onlineSwitch(event, state) {
+        //$('#warehouse_address').toggleClass("none");
+        // console.log($('#warehouse_address .chosen-select'));
+        // console.log($('#form-address'));
+        // console.log($('#warehouse_address .am-form-group-label-tips-must'));
+        // console.log($('#warehouse_address .am-form-group-label-tips'));
+        if(state || this.checked) {
+            $('#warehouse_address').removeClass("block").addClass("none");
+            $('#warehouse_address .chosen-select').attr("required", false);
+            $('#form-address').attr("required", false).attr("minlength", 0);
+            $('#warehouse_address .am-form-group-label-tips-must').text("选填")
+            .removeClass("am-form-group-label-tips-must")
+            .addClass("am-form-group-label-tips");
+        } else {
+            $('#warehouse_address').removeClass("none").addClass("block");
+            $('#warehouse_address .chosen-select').attr("required", true);
+            $('#form-address').attr("required", true).attr("minlength", 2);;
+            $('#warehouse_address .am-form-group-label-tips').text("必填")
+            .removeClass("am-form-group-label-tips")
+            .addClass("am-form-group-label-tips-must"); 
+        }
+    }
+    $('input[name="is_online"]').on('init.bootstrapSwitch', onlineSwitch);
+    $('input[name="is_online"]').on('switchChange.bootstrapSwitch', onlineSwitch);
+
 </script>

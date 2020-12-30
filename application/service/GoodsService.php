@@ -1172,6 +1172,14 @@ class GoodsService
                 throw new \Exception($ret['msg']);
             }
 
+            // 如果是虚拟商品，自动添加至在线仓库，并设置库存9999
+            if(empty($params['id']) && $site_type == 3) {
+                // 添加当前虚拟商品到在线仓库
+                $ret = WarehouseGoodsService::WarehouseGoodsAddOnline($goods_id);
+                if($ret['code'] != 0) {
+                    throw new \Exception($ret['msg']);
+                }
+            }
             // 仓库规格库存同步
             $ret = WarehouseGoodsService::GoodsSpecChangeInventorySync($goods_id);
             if($ret['code'] != 0)

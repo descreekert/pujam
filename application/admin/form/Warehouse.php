@@ -101,6 +101,23 @@ class Warehouse
                     ],
                 ],
                 [
+                    'label'         => '是否线上',
+                    'view_type'     => 'status',
+                    'view_key'      => 'is_online',
+                    'post_url'      => MyUrl('admin/warehouse/statusupdate'),
+                    'is_form_su'    => 1,
+                    'align'         => 'center',
+                    'is_sort'       => 1,
+                    'search_config' => [
+                        'form_type'         => 'select',
+                        'where_type'        => 'in',
+                        'data'              => lang('common_is_online_list'),
+                        'data_key'          => 'id',
+                        'data_name'         => 'name',
+                        'is_multiple'       => 1,
+                    ],
+                ],
+                [
                     'label'         => '联系人',
                     'view_type'     => 'field',
                     'view_key'      => 'contacts_name',
