@@ -272,7 +272,7 @@
                         <div class="am-panel am-panel-default am-margin-top-sm am-margin-bottom-0">
                             <div class="am-panel-hd">
                                 <strong>{{$v.name}}{{if !empty($v['alias'])}}<span class="am-badge am-badge-secondary-plain am-radius am-margin-left-xs">{{$v.alias}}</span>{{/if}}</strong>
-                                {{if isset($v['lng']) and isset($v['lat'])}}
+                                {{if isset($v['lng']) and isset($v['lat']) and !$v.is_online}}
                                     <div class="am-fr">
                                         <a href="javascript:;" class="am-badge am-badge-default am-radius am-icon-map-marker submit-map-popup" data-lng="{{$v.lng}}" data-lat="{{$v.lat}}"> 查看地图</a>
                                     </div>

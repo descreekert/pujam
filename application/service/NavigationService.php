@@ -868,6 +868,14 @@ class NavigationService
                         'icon'      =>  'am-icon-fire',
                         'is_system' =>  1,
                     ],
+                    [
+                        'name'      =>  '我的已购',
+                        'url'       =>  MyUrl('index/usergoodsowned/index'),
+                        'contains'  =>  ['indexusergoodsownedindex'],
+                        'is_show'   =>  1,
+                        'icon'      =>  'am-icon-th-list',
+                        'is_system' =>  1,
+                    ],
                 ]
             ],
             'base' => [

@@ -782,12 +782,16 @@ class OrderService
             // 虚拟商品自动触发发货操作
             if($order['order_model'] == 3)
             {
-                self::OrderDelivery([
+                $op = [
                     'id'                => $order['id'],
                     'creator'           => 0,
                     'creator_name'      => '系统',
                     'user_id'           => $order['user_id'],
-                ]);
+                ];
+                self::OrderDelivery($op);
+
+                // 虚拟商品自动确认收货
+                self::OrderCollect($op);
             }
         }
 

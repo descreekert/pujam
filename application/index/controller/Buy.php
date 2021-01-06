@@ -88,7 +88,12 @@ class Buy extends Common
                 $this->assign('user_address_list', $address['data']);
 
                 // 支付方式
-                $this->assign('payment_list', PaymentService::BuyPaymentList(['is_enable'=>1, 'is_open_user'=>1]));
+                $payment_list = PaymentService::BuyPaymentList(['is_enable'=>1, 'is_open_user'=>1]);
+                $this->assign('payment_list', $payment_list);
+                // 选中默认支付方式
+                if(empty($params['payment_id']) && !empty($payment_list)) {
+                    $params['payment_id'] = $payment_list[0]['id'];
+                }
 
                 // 公共销售模式
                 $this->assign('common_site_type', $buy_base['common_site_type']);

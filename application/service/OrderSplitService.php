@@ -248,7 +248,7 @@ class OrderSplitService
                 'w.is_enable'       => 1,
                 'w.is_delete_time'  => 0,
             ];
-            $field = 'distinct w.id,w.name,w.alias,w.lng,w.lat,w.province,w.city,w.county,w.address,wgs.inventory,w.is_default,w.level';
+            $field = 'distinct w.id,w.name,w.alias,w.lng,w.lat,w.province,w.city,w.county,w.address,wgs.inventory,w.is_default,w.level,w.is_online';
             $warehouse = Db::name('WarehouseGoodsSpec')->alias('wgs')->join(['__WAREHOUSE_GOODS__'=>'wg'], 'wgs.warehouse_id=wg.warehouse_id')->join(['__WAREHOUSE__'=>'w'], 'wg.warehouse_id=w.id')->where($where)->field($field)->order('w.level desc,w.is_default desc,wgs.inventory desc')->select();
 
             // 默认仓库
@@ -297,7 +297,7 @@ class OrderSplitService
                 // 未获取到仓库则使用默认仓库
                 if(empty($warehouse_default))
                 {
-                    $warehouse_default = Db::name('Warehouse')->where(['is_default'=>1, 'is_enable'=>1, 'is_delete_time'=>0])->field('id,name,alias,lng,lat,province,city,county,address')->find();
+                    $warehouse_default = Db::name('Warehouse')->where(['is_default'=>1, 'is_enable'=>1, 'is_delete_time'=>0])->field('id,name,alias,lng,lat,province,city,county,address,is_online')->find();
                 }
                 if(!empty($warehouse_default))
                 {

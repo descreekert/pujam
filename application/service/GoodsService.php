@@ -2557,7 +2557,7 @@ class GoodsService
             // 判断当前用户是否已购买产品
             $ret = [];
             if(!empty($user)) {
-                $ret = Db::name('UserGoods')->where(['goods_id'=>$goods_id, 'user_id'=>$user['id']])->select();
+                $ret = Db::name('UserGoodsOwned')->where(['goods_id'=>$goods_id, 'user_id'=>$user['id']])->select();
             }
 
             // 未购买，则显示预览图
