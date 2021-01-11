@@ -439,6 +439,7 @@ UE.I18N['zh-cn'] = {
             'lang_template_clear' : '保留原有内容',
             'lang_template_select' : '选择模板'
         },
+        'pujam':"谱匠曲谱",
         'blank':"空白文档",
         'blog':"博客文章",
         'resume':"个人简历",

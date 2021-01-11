@@ -5,6 +5,11 @@
 ul { list-style: none; }
 .none { display:none !important; }
 .block { display:block !important; }
+.width-full { width:100% !important; max-width: 100% !important;}
+.position-relative { position:relative !important;}
+.float-right { float:right !important;}
+.margin-left-0 { margin-left: 0 !important}
+.height-auto {height:auto !important; min-height: auto !important;}
 
 /* 没数据 */
 .table-no {text-align:center;padding:115px 0;background:#FFF !important;color: #888; }

@@ -68,8 +68,8 @@
             return false;
         }
         newIframe.setAttribute("src",/http:\/\/|https:\/\//ig.test(url) ? url : "http://"+url);
-        /^[1-9]+[.]?\d*$/g.test( width ) ? newIframe.setAttribute("width",width) : "";
-        /^[1-9]+[.]?\d*$/g.test( height ) ? newIframe.setAttribute("height",height) : "";
+        /^[1-9]+[.]?\d*[%]?$/g.test( width ) ? newIframe.setAttribute("width",width) : "";
+        /^[1-9]+[.]?\d*[%]?$/g.test( height ) ? newIframe.setAttribute("height",height) : "";
         scroll.checked ?  newIframe.setAttribute("scrolling","yes") : newIframe.setAttribute("scrolling","no");
         frameborder.checked ?  newIframe.setAttribute("frameborder","1",0) : newIframe.setAttribute("frameborder","0",0);
         float ? newIframe.setAttribute("align",float) :  newIframe.setAttribute("align","");

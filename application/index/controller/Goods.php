@@ -151,7 +151,16 @@ class Goods extends Common
             $ret = GoodsService::IsGoodsSiteTypeConsistent($goods_id, $goods['site_type']);
             $this->assign('is_goods_site_type_consistent', ($ret['code'] == 0) ? 1 : 0);
 
-            return $this->fetch();
+            // 商品是否已购买
+            $ret = GoodsService::UserGoodsOwned($goods_id, $this->user['id']);
+            $this->assign('is_user_goods_owned', empty($ret) ? 0 : 1);
+
+            $site_type = MyC('common_site_type', 0, true);
+            if($site_type == 3) {
+                $template = "index_".$site_type;
+            }
+            return $this->fetch($template);
+            //return $this->fetch();
         }
     }
 
