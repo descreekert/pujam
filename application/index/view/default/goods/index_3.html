@@ -155,7 +155,7 @@
                     <p class="simple-desc am-margin-bottom-xs">{{$goods.simple_desc}}</p>
                 {{/if}}
             </div>
-            <div class="tb-detail-list  {{if isset($is_user_goods_owned) or $is_user_goods_owned eq 1}}none{{/if}}">
+            <div class="tb-detail-list  {{if isset($is_user_goods_owned) and $is_user_goods_owned eq 1}}none{{/if}}">
                 <!-- 商品页面基础信息顶部钩子 -->
                 {{if isset($shopxo_is_develop) and $shopxo_is_develop eq true and (!isset($is_footer) or $is_footer eq 1)}}
                     <div class="plugins-tag">
@@ -381,7 +381,7 @@
             {{/if}}
 
             <!-- 购买导航 -->
-            <div class="buy-nav {{if isset($is_user_goods_owned) or $is_user_goods_owned eq 1}}none{{/if}} {{if $common_site_type eq 1}}exhibition-nav{{else /}}{{if isset($is_goods_site_type_consistent) and $is_goods_site_type_consistent neq 1}}site-type-not-consistent-nav{{/if}}{{/if}}">
+            <div class="buy-nav {{if isset($is_user_goods_owned) and $is_user_goods_owned eq 1}}none{{/if}} {{if $common_site_type eq 1}}exhibition-nav{{else /}}{{if isset($is_goods_site_type_consistent) and $is_goods_site_type_consistent neq 1}}site-type-not-consistent-nav{{/if}}{{/if}}">
                 {{if !empty($goods.is_shelves)}}
                     {{if $goods['inventory'] gt 0 or Myc('common_site_type') eq 3}}
                         <div class="buy-nav-opt position-relative float-right margin-left-0">
