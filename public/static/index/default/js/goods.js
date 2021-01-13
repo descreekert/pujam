@@ -646,7 +646,7 @@ $(function() {
     // tab事件
     $('.introduce-main .am-tabs li').on('click', function()
     {
-        $(window).smoothScroll({position: $('.introduce-main').offset().top});
+        // $(window).smoothScroll({position: $('.introduce-main').offset().top});
     });
 
 });

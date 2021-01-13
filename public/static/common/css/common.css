@@ -288,7 +288,15 @@ ul.plug-file-upload-view-file li {
     padding-right: 28px;
 }
 
+ul.plug-file-upload-view li img, ul.plug-file-upload-view-audio li video {
+    max-width: 100%;
+    max-height: 100%;
+}
 
+ul.plug-file-upload-view-audio li {
+    width: 320px;
+    height: 66px;
+}
 
 /**
  * 拖拽排序

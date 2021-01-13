@@ -516,6 +516,13 @@ class GoodsService
                     $v['images'] = ResourcesService::AttachmentPathViewHandle($v['images']);
                 }
 
+                // 音频
+                if(isset($v['audio']))
+                {
+                    $v['audio_old'] = $v['audio'];
+                    $v['audio'] = ResourcesService::AttachmentPathViewHandle($v['audio']);
+                }
+
                 // 视频
                 if(isset($v['video']))
                 {
@@ -1046,7 +1053,7 @@ class GoodsService
         }
 
         // 其它附件
-        $data_fields = ['images', 'video'];
+        $data_fields = ['images', 'video', 'audio'];
         $attachment = ResourcesService::AttachmentParams($params, $data_fields);
         if($attachment['code'] != 0)
         {
@@ -1081,6 +1088,7 @@ class GoodsService
             'is_home_recommended'       => isset($params['is_home_recommended']) ? intval($params['is_home_recommended']) : 0,
             'images'                    => $images,
             'brand_id'                  => isset($params['brand_id']) ? intval($params['brand_id']) : 0,
+            'audio'                     => $attachment['data']['audio'],
             'video'                     => $attachment['data']['video'],
             'seo_title'                 => empty($params['seo_title']) ? '' : $params['seo_title'],
             'seo_keywords'              => empty($params['seo_keywords']) ? '' : $params['seo_keywords'],

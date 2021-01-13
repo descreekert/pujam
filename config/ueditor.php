@@ -107,7 +107,25 @@ return [
       // 抓取图片格式显示
       'catcherAllowFiles'     =>  ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],
 
+      // 上传音频配置
+      // 执行上传音频的action名称
+      'audioActionName'       =>  'uploadaudio',
 
+      // 提交的音频表单名称
+      'audioFieldName'        =>  'upfile',
+
+      // 上传保存路径,可以自定义保存路径和文件名格式
+      'audioPathFormat'       =>  __MY_ROOT_PUBLIC__.'static/upload/audio/'.$upload_path.'/{yyyy}/{mm}/{dd}/{time}{rand:6}',
+ 
+      // 音频访问路径前缀
+      'audioUrlPrefix'        =>  '',
+ 
+      // 上传大小限制，单位B，默认100MB
+      'audioMaxSize'          =>  MyFileConfig('home_max_limit_audio', '', 102400000, true),
+ 
+      // 上传音频格式显示
+      'audioAllowFiles'       =>  ['.swf', '.ogg', '.ogv', '.mp4', '.webm', '.mp3'], 
+       
       // 上传视频配置
       // 执行上传视频的action名称
       'videoActionName'       =>  'uploadvideo',
@@ -198,5 +216,20 @@ return [
 
       // 列出的文件类型
       'videoManagerAllowFiles' =>  ['.swf', '.ogg', '.ogv', '.mp4', '.webm', '.mp3'], 
+
+      // 执行音频管理的action名称
+      'audioManagerActionName' =>  'listaudio',
+
+      // 指定要列出文件的目录
+      'audioManagerListPath'   =>  __MY_ROOT_PUBLIC__.'static/upload/audio/'.$config_path_type.'/',
+
+      // 文件访问路径前缀
+      'audioManagerUrlPrefix'  =>  '',
+
+      // 每次列出文件数量
+      'audioManagerListSize'   =>  20,
+
+      // 列出的文件类型
+      'audioManagerAllowFiles' =>  ['.swf', '.ogg', '.ogv', '.mp4', '.webm', '.mp3'], 
 ];
 ?>

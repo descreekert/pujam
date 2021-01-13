@@ -671,6 +671,10 @@ div.edui-box {
     background-position: -260px -40px;
 }
 
+.edui-default  .edui-for-insertaudio .edui-icon {
+    background-position: -320px -20px;
+}
+
 .edui-default  .edui-for-insertvideo .edui-icon {
     background-position: -320px -20px;
 }
@@ -1414,6 +1418,12 @@ div.edui-box {
     height: 400px;
 }
 
+/*audio-dialog*/
+.edui-default .edui-for-insertaudio .edui-dialog-content {
+    width: 590px;
+    height: 390px;
+}
+
 /*video-dialog*/
 .edui-default .edui-for-insertvideo .edui-dialog-content {
     width: 590px;
@@ -1926,6 +1936,7 @@ div.edui-box {
 
     #edui_fixedlayer,
     .edui-default .edui-for-insertimage .edui-dialog-content,
+    .edui-default .edui-for-insertaudio .edui-dialog-content,
     .edui-default .edui-for-insertvideo .edui-dialog-content,
     .edui-default .edui-for-attachment .edui-dialog-content,
     .edui-default .edui-for-map .edui-dialog-content,

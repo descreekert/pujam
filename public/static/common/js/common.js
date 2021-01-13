@@ -2607,6 +2607,54 @@ $(function()
 	                    $tag.append(html);
 	                }
 	            }
+			});
+			
+			// 音频上传
+	        upload_editor.addListener("beforeInsertAudio", function(t, result)
+	        {
+	            if(result.length > 0)
+	            {
+	                var $tag = $($('body').attr('view-tag'));
+	                var max_number = $tag.attr('data-max-number') || 0;
+	                var is_delete = ($tag.attr('data-delete') == undefined) ? 1 : $tag.attr('data-delete');
+	                var form_name = $tag.attr('data-form-name') || '';
+	                var is_attr = $tag.attr('data-is-attr') || null;
+
+	                // 只限制一条
+	                if(max_number <= 1)
+	                {
+	                    $tag.find('li').remove();
+	                }
+
+	                // 循环处理
+	                for(var i in result)
+	                {
+	                	// 是否直接赋值属性
+	                	if(i == 0 && is_attr != null)
+	                	{
+	                		$('form [name="'+form_name+'"]').val(result[i].src);
+	                		$tag.attr(is_attr, result[i].src);
+	                		break;
+	                	}
+
+	                	// 是否限制数量
+	                    if(max_number > 0 && $tag.find('li').length >= max_number)
+	                    {
+	                        Prompt('最多上传'+max_number+'个视频');
+	                        break;
+	                    }
+
+	                    var html = '<li>';
+	                        html += '<input type="text" name="'+form_name+'" value="'+result[i].src+'" />';
+	                        html += '<audio src="'+result[i].src+'" controls>your browser does not support the audio tag</audio>';
+	                        if(is_delete == 1)
+	                        {
+	                        	html += '<i>×</i>';
+	                        }
+	                        html += '</li>';
+	                    $tag.append(html);
+	                }
+	            }
 	        });
 	    });
 	}
@@ -2648,6 +2696,10 @@ $(function()
             // 文件
             case 'file' :
                 dialog_type = 'attachment';
+				break;
+			// 音频
+            case 'audio' :
+                dialog_type = 'insertaudio';
                 break;
         }
         if(dialog_type == null)

@@ -1006,6 +1006,7 @@ php;
             '_images_'          => ROOT.'public'.DS.'static'.DS.'plugins'.DS.'images'.DS,
             '_uploadfile_'      => ROOT.'public'.DS.'static'.DS.'upload'.DS.'file'.DS,
             '_uploadimages_'    => ROOT.'public'.DS.'static'.DS.'upload'.DS.'images'.DS,
+            '_uploadaudio_'     => ROOT.'public'.DS.'static'.DS.'upload'.DS.'audio'.DS,
             '_uploadvideo_'     => ROOT.'public'.DS.'static'.DS.'upload'.DS.'video'.DS,
         ];
 
@@ -1231,6 +1232,16 @@ php;
             if(\base\FileUtil::CopyDir($old_dir, $new_dir.DS.'_uploadimages_'.DS.'plugins_'.$plugins) != true)
             {
                 return DataReturn('项目包复制失败[uploadimages]', -2);
+            }
+        }
+
+        // 复制包目录 - uploadaudio
+        $old_dir = ROOT.'public'.DS.'static'.DS.'upload'.DS.'audio'.DS.'plugins_'.$plugins;
+        if(is_dir($old_dir))
+        {
+            if(\base\FileUtil::CopyDir($old_dir, $new_dir.DS.'_uploadaudio_'.DS.'plugins_'.$plugins) != true)
+            {
+                return DataReturn('项目包复制失败[uploadaudio]', -2);
             }
         }
 

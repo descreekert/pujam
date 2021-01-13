@@ -22,16 +22,13 @@
 						<a href="javascript:;" data-value="#goods-nav-photo">商品相册</a>
 					</li>
 					<li>
+						<a href="javascript:;" data-value="#goods-nav-audio">商品音频</a>
+					</li>
+					<li>
 						<a href="javascript:;" data-value="#goods-nav-video">商品视频</a>
 					</li>
 					<li>
-						<a href="javascript:;" data-value="#goods-nav-app">手机详情</a>
-					</li>
-					<li>
 						<a href="javascript:;" data-value="#goods-nav-web">电脑详情</a>
-					</li>
-					<li>
-						<a href="javascript:;" data-value="#goods-nav-fictitious">虚拟商品</a>
 					</li>
 					<li>
 						<a href="javascript:;" data-value="#goods-nav-seo">SEO</a>
@@ -211,11 +208,29 @@
 				<div class="plug-file-upload-submit" data-view-tag="ul.goods-photo-view">+上传相册</div>
 			</div>
 
+			<!-- 音频 -->
+			<div id="goods-nav-audio" class="division-block">
+				<label class="block nav-detail-title">商品音频</label>
+				<div class="am-form-group am-form-file am-form-group-refreshing">
+					<label class="block">音频<span class="am-form-group-label-tips">音频试听</span></label>
+					<ul class="plug-file-upload-view plug-file-upload-view-audio goods-audio-view" data-form-name="audio" data-max-number="1" data-dialog-type="audio">
+						{{if !empty($data['audio'])}}
+							<li>
+								<input type="text" name="audio" value="{{$data.audio}}" />
+								<audio src="{{$data.audio}}" controls>your browser does not support the audio tag</audio>
+								<i>×</i>
+							</li>
+						{{/if}}
+					</ul>
+					<div class="plug-file-upload-submit" data-view-tag="ul.goods-audio-view">+上传音频</div>
+				</div>
+			</div>
+
 			<!-- 视频 -->
 			<div id="goods-nav-video" class="division-block">
 				<label class="block nav-detail-title">商品视频</label>
 				<div class="am-form-group am-form-file am-form-group-refreshing">
-					<label class="block">短视频<span class="am-form-group-label-tips">视频比图文更有具带入感，仅支持 mp4 格式</span></label>
+					<label class="block">短视频<span class="am-form-group-label-tips">视频比图文更有具带入感</span></label>
 					<ul class="plug-file-upload-view plug-file-upload-view-video goods-video-view" data-form-name="video" data-max-number="1" data-dialog-type="video">
 						{{if !empty($data['video'])}}
 							<li>
@@ -229,54 +244,11 @@
 				</div>
 			</div>
 
-			<!-- app内容 -->
-			<div id="goods-nav-app" class="division-block">
-				<label class="block nav-detail-title">手机详情</label>
-				<ul class="content-app-items business-form-group am-form-group-refreshing" data-max-count="10" data-required="1" data-images-name="content_app_images" data-content-name="content_app_text" data-images-text="图片" data-content-text="文本内容" data-delete-text="删除" data-drag-sort-text="拖拽排序">
-					{{if !empty($data['content_app'])}}
-						{{foreach $data.content_app as $v}}
-							<li>
-								<div>
-									<div class="content-app-left">
-										<label class="block">图片</label>
-										<ul class="plug-file-upload-view goods-content-app-images-view-{{$v.id}}" data-form-name="content_app_images_{{$v.id}}" data-max-number="1" data-dialog-type="images">
-											{{if !empty($v['images'])}}
-												<li>
-													<input type="text" name="content_app_images_{{$v.id}}" value="{{$v.images_old}}" />
-													<img src="{{$v.images}}" />
-													<i>×</i>
-												</li>
-											{{/if}}
-										</ul>
-										<div class="plug-file-upload-submit" data-view-tag="ul.goods-content-app-images-view-{{$v.id}}">+上传图片</div>
-									</div>
-									<div class="am-form-group content-app-right fr">
-										<label>文本内容</label>
-										<textarea rows="5" name="content_app_text_{{$v.id}}" maxlength="105000" class="am-radius" placeholder="文本内容" data-validation-message="文本内容最多 105000 个字符">{{if !empty($v)}}{{$v.content_old|raw}}{{/if}}</textarea>
-									</div>
-								</div>
-								<i class="c-p am-text-xs cr-red content-app-items-rem-sub">删除</i>
-								<i class="c-m am-text-xs drag-sort-submit">拖拽排序</i>
-							</li>
-						{{/foreach}}
-					{{/if}}
-				</ul>
-				<span class="business-operations-submit content-app-items-add-sub">+添加手机详情</span>
-			</div>
-
 			<!-- web内容 -->
 			<div id="goods-nav-web" class="division-block">
 				<label class="block nav-detail-title">电脑详情</label>
 				<div class="am-form-group am-form-group-refreshing">
 					<textarea class="am-radius am-validate" name="content_web" maxlength="105000" id="editor-tag" data-validation-message="电脑端详情内容最多 105000 个字符">{{if !empty($data)}}{{$data.content_web}}{{/if}}</textarea>
-				</div>
-			</div>
-
-			<!-- 虚拟商品 -->
-			<div id="goods-nav-fictitious" class="division-block">
-				<label class="block nav-detail-title">虚拟商品<span class="am-form-group-label-tips">用户下单后自动发货，用于将该数据展示在用户订单中</span></label>
-				<div class="am-form-group">
-					<script type="text/plain" id="goods-fictitious-container" name="fictitious_goods_value">{{if !empty($data)}}{{$data.fictitious_goods_value|raw}}{{/if}}</script>
 				</div>
 			</div>
 

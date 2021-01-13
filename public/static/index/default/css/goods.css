@@ -458,3 +458,21 @@ flex: 1 1 0%;line-height: 16px;cursor: pointer;}
 @media only screen and (min-width:641px) {
     .exhibition-nav .buy-nav-opt { margin-left: 120px; }
 }
+
+.content-photo {
+    position:relative
+}
+.content-photo .js-play{
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-top:-70px;
+    margin-left:-70px;
+    width:140px;
+    height:140px;
+    background:url(../images/icon-play.png) center no-repeat
+}
+
+.content-photo .js-play.pl{
+    background:url(../images/icon-pause.png) center no-repeat
+}

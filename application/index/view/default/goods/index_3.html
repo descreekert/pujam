@@ -590,15 +590,34 @@
                             
                             <!-- web详情 -->
                             <div class="content-web am-scrollable-horizontal">{{$goods.content_web|raw}}</div>
-                            {{if isset($common_is_goods_detail_show_photo) and $common_is_goods_detail_show_photo eq 1 and !empty($goods.photo)}}
-                                <!-- 详情相册 -->
-                                <div class="content-photo">
-                                    {{foreach $goods.photo as $photo}}
-                                        <li>
-                                            <img class="width-full" src="{{$photo.images}}" title="{{$goods.title}}" />
-                                        </li>
-                                    {{/foreach}}
+                            {{if isset($is_user_goods_owned) and $is_user_goods_owned eq 1}}
+                                {{if isset($common_is_goods_detail_show_photo) and $common_is_goods_detail_show_photo eq 1 and !empty($goods.photo)}}
+                                    <!-- 详情相册 -->
+                                    <div class="content-photo">
+                                        {{if !empty($goods.audio)}}
+                                        <audio class="width-full" src="{{$goods.audio}}" controls="controls" preload="auto" id="d_audio"></audio>
+                                        {{/if}}
+                                        {{foreach $goods.photo as $photo}}
+                                            <li>
+                                                <img class="width-full" src="{{$photo.images}}" title="{{$goods.title}}" />
+                                            </li>
+                                        {{/foreach}}
+                                    </div>
+                                {{/if}}
+                            {{else}}
+                                <!-- 封面图-->
+                                <div class="content-photo">                                
+                                    <li>
+                                        <img class="width-full" src="{{$goods.images}}" title="{{$goods.title}}"/>
+                                    </li>
+                                    <!-- 音频 -->
+                                    {{if !empty($goods.audio)}}
+                                        <audio class="none" src="{{$goods.audio}}" controls="controls" preload="auto" id="d_audio"></audio>
+                                        <a id="d_audio_status" class="js-play"></a>
+                                    {{/if}}
+                                    
                                 </div>
+                                
                             {{/if}}
                         </div>
                     </div>
@@ -705,4 +724,21 @@ function CartSubmitBack(e)
     $.AMUI.progress.done();
     $('form.cart-form').find('button[type="submit"]').button('reset');
 }
+
+{{if !empty($goods.audio)}}
+//音乐控制
+$("#d_audio_status").click(function(){
+    var obj = $(this);
+    var audioObj = document.getElementById("d_audio");
+    if(obj.hasClass("pl")){
+        audioObj.pause();
+        obj.removeClass("pl");
+        
+    } else{
+        audioObj.play();
+        obj.removeClass("load").addClass("pl");
+    }
+});
+{{/if}}
+
 </script>

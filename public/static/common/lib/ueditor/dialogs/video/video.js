@@ -231,8 +231,8 @@
                                 if(_this.listIndex >= json.data.total) {
                                     _this.listEnd = true;
                                 }
-                                _this.isLoadingData = false;
                             }
+                            _this.isLoadingData = false;
                         } catch (e) {
                             if(r.responseText.indexOf('ue_separate_ue') != -1) {
                                 var list = r.responseText.split(r.responseText);

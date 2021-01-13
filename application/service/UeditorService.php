@@ -56,6 +56,8 @@ class UeditorService
             case 'uploadimage':
             /* 上传涂鸦 */
             case 'uploadscrawl':
+            /* 上传音频 */
+            case 'uploadaudio':
             /* 上传视频 */
             case 'uploadvideo':
             /* 上传文件 */
@@ -67,6 +69,8 @@ class UeditorService
             case 'listimage':
             /* 列出文件 */
             case 'listfile':
+            /* 列出音频 */
+            case 'listaudio':
             /* 列出视频 */
             case 'listvideo':
                 $ret = self::ActionList();
@@ -131,6 +135,16 @@ class UeditorService
                 $attachment_type = "scrawl";
                 break;
 
+            case 'uploadaudio':
+                $temp_config = array(
+                        "pathFormat" => self::$current_config['audioPathFormat'],
+                        "maxSize" => self::$current_config['audioMaxSize'],
+                        "allowFiles" => self::$current_config['audioAllowFiles']
+                    );
+                $field_name = self::$current_config['audioFieldName'];
+                $attachment_type = "audio";
+                break;
+
             case 'uploadvideo':
                 $temp_config = array(
                         "pathFormat" => self::$current_config['videoPathFormat'],
@@ -190,6 +204,12 @@ class UeditorService
         /* 判断类型 */
         switch(self::$current_action)
         {
+            /* 列出音频 */
+            case 'listaudio':
+                $allow_files = self::$current_config['audioManagerAllowFiles'];
+                $list_size = self::$current_config['audioManagerListSize'];
+                $path = self::$current_config['audioManagerListPath'];
+                break;
             /* 列出视频 */
             case 'listvideo':
                 $allow_files = self::$current_config['videoManagerAllowFiles'];

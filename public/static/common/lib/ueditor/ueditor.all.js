@@ -17628,6 +17628,173 @@ UE.plugins['autofloat'] = function() {
     });
 };
 
+// plugins/video.js
+/**
+ * video插件， 为UEditor提供视频插入支持
+ * @file
+ * @since 1.2.6.1
+ */
+
+UE.plugins['audio'] = function (){
+    var me =this;
+
+    /**
+     * 创建插入音频字符窜
+     * @param url 音频地址
+     * @param width 音频宽度
+     * @param height 音频高度
+     * @param align 音频对齐
+     * @param toEmbed 是否以flash代替显示
+     * @param addParagraph  是否需要添加P 标签
+     */
+    function creatInsertStr(url,width,height,id,align,classname,type){
+        url = utils.unhtmlForUrl(url);
+        align = utils.unhtml(align);
+        classname = utils.unhtml(classname);
+
+        width = parseInt(width, 10) || 0;
+        height = parseInt(height, 10) || 0;
+
+        var str;
+        var ext = url.substr(url.lastIndexOf('.') + 1);
+        if(type != 'image' && ext != 'swf') {
+            type = 'audio';
+        }
+        switch (type){
+            case 'image':
+                str = '<img ' + (id ? 'id="' + id+'"' : '') + ' width="'+ width +'" height="' + height + '" _url="'+url+'" class="' + classname.replace(/\baudio-js\b/, '') + '"'  +
+                    ' src="' + me.options.UEDITOR_HOME_URL+'themes/default/images/spacer.gif" style="background:url('+me.options.UEDITOR_HOME_URL+'themes/default/images/audiologo.gif) no-repeat center center; border:1px solid gray;'+(align ? 'float:' + align + ';': '')+'" />'
+                break;
+            // 音频格式全部合并到audio
+            case 'embed':
+                str = '<embed type="application/x-shockwave-flash" class="' + classname + '" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
+                    ' src="' +  utils.html(url) + '" width="' + width  + '" height="' + height  + '"'  + (align ? ' style="float:' + align + '"': '') +
+                    ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >';
+                break;
+            case 'audio':
+                if(ext == 'ogv') ext = 'ogg';
+                str = '<audio' + (id ? ' id="' + id + '"' : '') + ' class="' + classname + ' audio-js" ' + (align ? ' style="float:' + align + '"': '') +
+                    ' controls preload="none" width="' + width + '" height="' + height + '" src="' + url + '" data-setup="{}">' +
+                    '<source src="' + url + '" type="audio/' + ext + '" /></audio>';
+                break;
+        }
+        return str;
+    }
+
+    function switchImgAndAudio(root,img2audio){
+        utils.each(root.getNodesByTagName(img2audio ? 'img' : 'embed audio'),function(node){
+            var className = node.getAttr('class');
+            if(className && className.indexOf('edui-faked-audio') != -1){
+                var html = creatInsertStr( img2audio ? node.getAttr('_url') : node.getAttr('src'),node.getAttr('width'),node.getAttr('height'),null,node.getStyle('float') || '',className,img2audio ? 'embed':'image');
+                node.parentNode.replaceChild(UE.uNode.createElement(html),node);
+            }
+            if(className && className.indexOf('edui-upload-audio') != -1){
+                var html = creatInsertStr( img2audio ? node.getAttr('_url') : node.getAttr('src'),node.getAttr('width'),node.getAttr('height'),null,node.getStyle('float') || '',className,img2audio ? 'audio':'image');
+                node.parentNode.replaceChild(UE.uNode.createElement(html),node);
+            }
+        })
+    }
+
+    me.addOutputRule(function(root){
+        switchImgAndAudio(root,true)
+    });
+    me.addInputRule(function(root){
+        switchImgAndAudio(root)
+    });
+
+    /**
+     * 插入音频
+     * @command insertaudio
+     * @method execCommand
+     * @param { String } cmd 命令字符串
+     * @param { Object } audioAttr 键值对对象， 描述一个音频的所有属性
+     * @example
+     * ```javascript
+     *
+     * var audioAttr = {
+     *      //音频地址
+     *      url: 'http://www.youku.com/xxx',
+     *      //音频宽高值， 单位px
+     *      width: 200,
+     *      height: 100
+     * };
+     *
+     * //editor 是编辑器实例
+     * //向编辑器插入单个音频
+     * editor.execCommand( 'insertaudio', audioAttr );
+     * ```
+     */
+
+    /**
+     * 插入音频
+     * @command insertaudio
+     * @method execCommand
+     * @param { String } cmd 命令字符串
+     * @param { Array } audioArr 需要插入的音频的数组， 其中的每一个元素都是一个键值对对象， 描述了一个音频的所有属性
+     * @example
+     * ```javascript
+     *
+     * var audioAttr1 = {
+     *      //音频地址
+     *      url: 'http://www.youku.com/xxx',
+     *      //音频宽高值， 单位px
+     *      width: 200,
+     *      height: 100
+     * },
+     * audioAttr2 = {
+     *      //音频地址
+     *      url: 'http://www.youku.com/xxx',
+     *      //音频宽高值， 单位px
+     *      width: 200,
+     *      height: 100
+     * }
+     *
+     * //editor 是编辑器实例
+     * //该方法将会向编辑器内插入两个音频
+     * editor.execCommand( 'insertaudio', [ audioAttr1, audioAttr2 ] );
+     * ```
+     */
+
+    /**
+     * 查询当前光标所在处是否是一个音频
+     * @command insertaudio
+     * @method queryCommandState
+     * @param { String } cmd 需要查询的命令字符串
+     * @return { int } 如果当前光标所在处的元素是一个音频对象， 则返回1，否则返回0
+     * @example
+     * ```javascript
+     *
+     * //editor 是编辑器实例
+     * editor.queryCommandState( 'insertaudio' );
+     * ```
+     */
+    me.commands["insertaudio"] = {
+        execCommand: function (cmd, audioObjs, type){
+            audioObjs = utils.isArray(audioObjs)?audioObjs:[audioObjs];
+            var html = [],id = 'tmpAudio', cl;
+            for(var i=0,vi,len = audioObjs.length;i<len;i++){
+                vi = audioObjs[i];
+                cl = (type == 'upload' ? 'edui-upload-audio audio-js vjs-default-skin':'edui-faked-audio');
+                var url = ((vi.url || null) == null) ? ((vi.src || null) == null ? '' : vi.src) : vi.url;
+                html.push(creatInsertStr( url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'image'));
+            }
+            me.execCommand("inserthtml",html.join(""),true);
+            var rng = this.selection.getRange();
+            for(var i= 0,len=audioObjs.length;i<len;i++){
+                var img = this.document.getElementById('tmpAudio'+i);
+                domUtils.removeAttributes(img,'id');
+                rng.selectNode(img).select();
+                me.execCommand('imagefloat',audioObjs[i].align)
+            }
+            me.fireEvent('beforeinsertaudio', audioObjs);
+        },
+        queryCommandState : function(){
+            var img = me.selection.getRange().getClosedNode(),
+                flag = img && (img.className == "edui-faked-audio" || img.className.indexOf("edui-upload-audio")!=-1);
+            return flag ? 1 : 0;
+        }
+    };
+};
 
 // plugins/video.js
 /**
@@ -27842,7 +28009,8 @@ UE.ui = baidu.editor.ui = {};
         'music':'~/dialogs/music/music.html',
         'template':'~/dialogs/template/template.html',
         'background':'~/dialogs/background/background.html',
-        'charts': '~/dialogs/charts/charts.html'
+        'charts': '~/dialogs/charts/charts.html',
+        'insertaudio': '~/dialogs/audio/audio.html'
     };
     //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
     var btnCmds = ['undo', 'redo', 'formatmatch',
@@ -27970,7 +28138,7 @@ UE.ui = baidu.editor.ui = {};
     var dialogBtns = {
         noOk:['searchreplace', 'help', 'spechars', 'webapp','preview'],
         ok:['attachment', 'anchor', 'link', 'insertimage', 'map', 'gmap', 'insertframe', 'wordimage',
-            'insertvideo', 'insertframe', 'edittip', 'edittable', 'edittd', 'scrawl', 'template', 'music', 'background', 'charts']
+            'insertaudio','insertvideo', 'insertframe', 'edittip', 'edittable', 'edittd', 'scrawl', 'template', 'music', 'background', 'charts']
     };
 
     for (var p in dialogBtns) {
@@ -28898,6 +29066,9 @@ UE.ui = baidu.editor.ui = {};
                         var dialogName = 'insertimageDialog';
                         if (img.className.indexOf("edui-faked-video") != -1 || img.className.indexOf("edui-upload-video") != -1) {
                             dialogName = "insertvideoDialog"
+                        }
+                        if (img.className.indexOf("edui-faked-audio") != -1 || img.className.indexOf("edui-upload-audio") != -1) {
+                            dialogName = "insertaudioDialog"
                         }
                         if (img.className.indexOf("edui-faked-webapp") != -1) {
                             dialogName = "webappDialog"

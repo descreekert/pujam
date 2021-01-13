@@ -87,6 +87,7 @@ class Uploader
 
             // 文件、视频
             case 'file' :
+            case 'audio' :
             case 'video' :
                 $this->uploadFile();
                 break;
