@@ -590,7 +590,7 @@
                             
                             <!-- web详情 -->
                             <div class="content-web am-scrollable-horizontal">{{$goods.content_web|raw}}</div>
-                            {{if isset($is_user_goods_owned) and $is_user_goods_owned eq 1}}
+                            {{if (isset($is_user_goods_owned) and $is_user_goods_owned eq 1) or $goods.price eq 0 }}
                                 {{if isset($common_is_goods_detail_show_photo) and $common_is_goods_detail_show_photo eq 1 and !empty($goods.photo)}}
                                     <!-- 详情相册 -->
                                     <div class="content-photo">
