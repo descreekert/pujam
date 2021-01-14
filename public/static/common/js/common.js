@@ -2548,7 +2548,12 @@ $(function()
 
 	                    var html = '<li>';
 	                        html += '<input type="text" name="'+form_name+'" value="'+result[i].src+'" />';
-	                        html += '<video src="'+result[i].src+'" controls>your browser does not support the video tag</video>';
+							
+							if(result[i].is_iframe) {
+								html += '<iframe src="'+result[i].src+'"></iframe>';
+							} else {
+								html += '<video src="'+result[i].src+'" controls>your browser does not support the video tag</video>';
+							}
 	                        if(is_delete == 1)
 	                        {
 	                        	html += '<i>×</i>';

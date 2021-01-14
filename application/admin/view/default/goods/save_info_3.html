@@ -235,7 +235,7 @@
 						{{if !empty($data['video'])}}
 							<li>
 								<input type="text" name="video" value="{{$data.video}}" />
-								<video src="{{$data.video}}" controls>your browser does not support the video tag</video>
+								<iframe src="{{$data.video}}">your browser does not support the video tag</iframe>
 								<i>×</i>
 							</li>
 						{{/if}}

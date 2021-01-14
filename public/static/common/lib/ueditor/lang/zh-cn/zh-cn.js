@@ -428,12 +428,13 @@ UE.I18N['zh-cn'] = {
         'errorHttp':'http请求错误',
         'errorServerUpload':'服务器返回出错'
     },
-    'insertvideo':{
+    'insertvideo':{   
         'static':{
             'lang_tab_insertV':"插入视频",
             'lang_tab_searchV':"搜索视频",
             'lang_tab_uploadV':"上传视频",
             'lang_tab_onlineV':"在线视频",
+            'lang_tab_iframeV':"嵌入代码",
             'lang_video_url':"视频网址",
             'lang_video_size':"视频尺寸",
             'lang_videoW':"宽度",
@@ -451,7 +452,15 @@ UE.I18N['zh-cn'] = {
             'lang_upload_width':"宽度",
             'lang_upload_height':"高度",
             'lang_upload_alignment':"对齐方式",
-            'lang_format_advice':"建议使用mp4格式."
+            'lang_format_advice':"建议使用mp4格式.",
+
+            'lang_input_address':'地址：',
+            'lang_input_width':'宽度：',
+            'lang_input_height':'高度：',
+            'lang_input_isScroll':'允许滚动条：',
+            'lang_input_frameborder':'显示框架边框：',
+            'lang_input_alignMode':'对齐方式：',
+            'align':{title:"对齐方式", options:["默认", "左对齐", "右对齐", "居中"]}
 
         },
         'numError':"请输入正确的数值，如123,400",
@@ -513,7 +522,8 @@ UE.I18N['zh-cn'] = {
         'errorInterrupt':'文件传输中断',
         'errorUploadRetry':'上传失败，请重试',
         'errorHttp':'http请求错误',
-        'errorServerUpload':'服务器返回出错'
+        'errorServerUpload':'服务器返回出错',
+        'enterAddress':'请输入地址!'
     },
     'webapp':{
         'tip1':"本功能由百度APP提供，如看到此页面，请各位站长首先申请百度APPKey!",
