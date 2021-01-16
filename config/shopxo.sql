@@ -448,6 +448,7 @@ CREATE TABLE `s_goods` (
   `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
   `upd_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   `audio` char(255) NOT NULL DEFAULT '' COMMENT '音频',
+  `file` char(255) NOT NULL DEFAULT '' COMMENT '文件',
   PRIMARY KEY (`id`),
   KEY `title` (`title`),
   KEY `access_count` (`access_count`),
@@ -1662,7 +1663,7 @@ select
 from
 	`s_attachment` `sa1` inner join `s_attachment` `sa2` 
 on
-	`sa1`.`original` = `sa2`.`original`
+	`sa1`.`title` = `sa2`.`original`
 	and `sa1`.`id` < `sa2`.`id`
 	and `sa1`.`url` <> `sa2`.`url`
 	and `sa1`.`hash` <> `sa2`.`hash`

@@ -661,7 +661,7 @@ class ResourcesService
         // 数据组装
         $preview = [
             'title'         => $new_title,
-            'original'      => $original['original'],
+            'original'      => $original['title'],
             'path_type'     => $original['path_type'],
             'ext'           => $ext,
             'type'          => $original['type'],
@@ -705,6 +705,62 @@ class ResourcesService
             }
         }
         return DataReturn('附件图片同步成功', 0);
+    }
+
+    /**
+     * PDF文件转图片
+     * @author  descreekert
+     * @version 1.0.0
+     * @date    2020-12-22
+     * @desc    description
+     * @param   String          $file     [上传文件]
+     * @return  [array]                    [boolean | msg]
+     */
+    public static function AttachmentPDFToImg($file, $path_type='goods')
+    {
+        // 判断文件类型，目前只支持PDF
+        $extension = substr($file, strrpos($file, '.')+1);
+        $allowedExtension = MyC('goods_file_allowed_type', ['pdf'], true);
+        if(!in_array(strtolower($extension),$allowedExtension)) {
+            return DataReturn('上传文件类型不符，当前只支持['.$extension.']', -1);
+        }
+        
+        // 根据文件转图片
+        $file = self::AttachmentPathHandle($file);
+        $public_path = GetDocumentRoot() . __MY_ROOT_PUBLIC__;
+        $org_file = $public_path.$file;
+        $new_path = $public_path.'static/upload/images/'.$path_type.'/'.date('Y/m/d').'/';
+        $new_title = date('YmdHis').str_shuffle(rand());
+        $ext = "png";
+        // PDF to PNG
+        $pics = \base\Images::Pdf2Images($org_file, $new_path, $new_title, $ext);
+        if(empty($pics)) {
+            return DataReturn('文件转图片失败，请重新上传文件或相册', -1);
+        }
+        
+        // 添加附件
+        foreach($pics as &$pic) {
+            // 数据组装
+            $attachment = [
+                'title'         => substr($pic, strrpos($pic, '/')+1),
+                'original'      => substr($file, strrpos($file, '/')+1),
+                'path_type'     => $path_type,
+                'ext'           => '.'.$ext,
+                'type'          => 'image',
+                'url'           => str_replace($public_path, DS, $pic),
+                'size'          => file_exists($pic) ? filesize($pic) : 0,
+                'hash'          => file_exists($pic) ? hash_file('sha256', $pic, false) : '',
+            ];
+            // 并添加到附件表
+            $ret = self::AttachmentAdd($attachment);
+            if($ret['code'] != 0)
+            {
+                return DataReturn('文件转图片，数据库保存失败，请重新上传文件或相册', -1);
+            }
+            $pic = $attachment['url'];
+        }
+       
+        return DataReturn('文件转图片成功', 0, $pics);
     }
 
 }

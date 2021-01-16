@@ -587,15 +587,14 @@
 
                         <!-- 详情内容 -->
                         <div class="detail-content am-margin-top-sm">
-                            
+                            <!-- 视频 -->
                             {{if !empty($goods.video)}}
                                 <div class="content-video">
                                     <iframe src="{{$goods.video}}" width="100%" height="600" scrolling="no" frameborder="0"></iframe>
                                 </div>
                             {{/if}}
                             
-                            <!-- web详情 -->
-                            <div class="content-web am-scrollable-horizontal">{{$goods.content_web|raw}}</div>
+                            <!-- 相册 -->
                             {{if (isset($is_user_goods_owned) and $is_user_goods_owned eq 1) or $goods.price eq 0 }}
                                 {{if isset($common_is_goods_detail_show_photo) and $common_is_goods_detail_show_photo eq 1 and !empty($goods.photo)}}
                                     <!-- 详情相册 -->
@@ -624,6 +623,25 @@
                                     
                                 </div>
                                 
+                            {{/if}}
+
+                            <!-- web详情 -->
+                            <div class="content-web am-scrollable-horizontal">
+                                <h1 class="goods_detail_h1">详情说明</h1>
+                                {{$goods.content_web|raw}}
+                            </div>
+                            
+                            <!-- 下载地址 -->
+                            {{if (isset($is_user_goods_owned) and $is_user_goods_owned eq 1) or $goods.price eq 0 }}
+                                {{if !empty($goods.file)}}
+                                    <div class="content-file">
+                                        <h1 class="goods_detail_h1">下载地址</h1>
+                                        <a href="{{$goods.file}}" title="{{$goods.title}}" target="_blank">
+                                            <img src="public/static/common/lib/ueditor/dialogs/attachment/fileTypeImages/icon_pdf.gif"/>
+                                            {{$goods.title}}
+                                        </a>
+                                    </div>
+                                {{/if}}
                             {{/if}}
                         </div>
                     </div>

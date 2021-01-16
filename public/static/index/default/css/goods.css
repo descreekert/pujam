@@ -63,6 +63,7 @@ input{font-size:12px;font-size:100%;outline:none;line-height:normal;color:#444;}
 
 /*详情*/
 .detail-content img { max-width: 100%; height: auto; }
+.detail-content div { margin-bottom: 30px;}
 
 @media only screen and (min-width:640px) {
     .theme-span{height:0px;background:#fff ;}
@@ -475,4 +476,22 @@ flex: 1 1 0%;line-height: 16px;cursor: pointer;}
 
 .content-photo .js-play.pl{
     background:url(../images/icon-pause.png) center no-repeat
+}
+
+.goods_detail_h1 {
+    white-space: normal; 
+    font-size: 32px; 
+    border-top: 2px solid rgb(204, 204, 204); 
+    border-bottom: 2px solid rgb(204, 204, 204); 
+    padding: 0px 4px 0px 0px; 
+    margin: 0px 0px 10px;
+    color: rgb(227, 108, 9); 
+    font-family: 楷体, 楷体_GB2312, SimKai; 
+    font-size: 36px;
+}
+
+.content-file a {
+    line-height: 16px; 
+    font-size:14px; 
+    color:#0066cc;
 }

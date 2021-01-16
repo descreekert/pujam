@@ -262,6 +262,7 @@ ul.plug-file-upload-view li img, ul.plug-file-upload-view-video li video, ul.plu
     max-width: 100%;
     max-height: 100%;
 }
+
 ul.plug-file-upload-view li i {
     font-style: normal;
     font-size: 18px;
@@ -285,9 +286,14 @@ ul.plug-file-upload-view-video li {
     height: 200px;
 }
 ul.plug-file-upload-view-file li {
+    width: 200px;
+    height: 36px;
+    padding-right: 28px;
+}
+
+ul.plug-file-upload-view-file li a img{
     width: auto;
     height: auto;
-    padding-right: 28px;
 }
 
 ul.plug-file-upload-view li img, ul.plug-file-upload-view-audio li audio {

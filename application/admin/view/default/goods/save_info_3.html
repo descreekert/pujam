@@ -19,6 +19,9 @@
 						<a href="javascript:;" data-value="#goods-nav-operations">商品规格</a>
 					</li>
 					<li>
+						<a href="javascript:;" data-value="#goods-nav-file">商品文件</a>
+					</li>
+					<li>
 						<a href="javascript:;" data-value="#goods-nav-photo">商品相册</a>
 					</li>
 					<li>
@@ -190,10 +193,32 @@
 					</table>
 				</div>
 			</div>
-			
+				
+			<!-- 文件 -->
+			<div id="goods-nav-file" class="division-block">
+				<label class="block nav-detail-title">商品文件
+					<span class="am-form-group-label-tips">相册与文件，至少上传一样。目前只支持PDF</span>
+				</label>
+				<ul class="plug-file-upload-view plug-file-upload-view-file goods-file-view" data-form-name="file" data-max-number="1" data-dialog-type="file">
+					{{if !empty($data['file'])}}
+						<li>
+							<input type="text" name="file" value="{{$data.file}}" />
+							<a href="{{$data.file}}" title="{{$data.title}}" target="_blank">
+								<img src="public/static/common/lib/ueditor/dialogs/attachment/fileTypeImages/icon_pdf.gif"/>
+								{{$data.title}}
+						    </a>
+							<i>×</i>
+						</li>
+					{{/if}}
+				</ul>
+				<div class="plug-file-upload-submit" data-view-tag="ul.goods-file-view">+上传文件</div>
+			</div>
+
 			<!-- 相册 -->
 			<div id="goods-nav-photo" class="division-block">
-				<label class="block nav-detail-title">商品相册<span class="am-form-group-label-tips">可拖拽图片进行排序，建议图片尺寸一致、最多30张</span></label>
+				<label class="block nav-detail-title">商品相册
+					<span class="am-form-group-label-tips">相册与文件，至少上传一样。可拖拽图片进行排序，建议图片尺寸一致、最多30张</span>
+				</label>
 				<ul class="plug-file-upload-view goods-photo-view" data-form-name="photo[]" data-max-number="30" data-dialog-type="images">
 					{{if !empty($data['photo'])}}
 						{{foreach $data.photo as $v}}
@@ -230,7 +255,7 @@
 			<div id="goods-nav-video" class="division-block">
 				<label class="block nav-detail-title">商品视频</label>
 				<div class="am-form-group am-form-file am-form-group-refreshing">
-					<label class="block">短视频<span class="am-form-group-label-tips">视频比图文更有具带入感</span></label>
+					<label class="block">短视频<span class="am-form-group-label-tips">视频比图文更有具带入感, 可插入MP4或iframe</span></label>
 					<ul class="plug-file-upload-view plug-file-upload-view-video goods-video-view" data-form-name="video" data-max-number="1" data-dialog-type="video">
 						{{if !empty($data['video'])}}
 							<li>

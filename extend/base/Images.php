@@ -470,7 +470,7 @@ class Images
 	 * @param  [int] 	$height[指定图片高度]
 	 * @return [boolean] 	   [成功true, 失败false]
 	 */
-	public static function ImageCrop($org_file, $type, $new_file, $width=0, $height=0)
+	public static function ImageCrop($org_file, $type = 'png', $new_file, $width=0, $height=0)
 	{
 		/* 获取图片原本尺寸 */
 		list($w, $h) = getimagesize($org_file);
@@ -485,16 +485,17 @@ class Images
 		if($height > 0) {
 			$height = ($h > $height) ? $height : $h;
 		} else {
-			$height = $h * $percent;
+			// $height = $h * $percent;
+			$height = $width;
 		}
 	
 		/* url创建一个新图象 */
 		switch($type)
 	    {
-	        case 'gif':
+	        case '.gif':
 	            $src_im = @imagecreatefromgif($org_file);
 	            break;
-	        case 'png':
+	        case '.png':
 	            $src_im = @imagecreatefrompng($org_file);
 	            break;
 	        default:
@@ -563,6 +564,112 @@ class Images
 
 		imagettftext($image, $font_size, $text_angle, $x, $y, $text_color, $font_file, $text);
 
+	}
+
+	/**
+	 * 将pdf转化为多张图片	
+	 *
+	 * @param string $pdf  pdf所在路径 （/www/pdf/abc.pdf pdf所在的绝对路径）
+	 * @param string $path 新生成图片所在路径 (/www/pngs/)
+	 *
+	 * @param string $picExtension
+	 *
+	 * @return string
+	 * @throws \ImagickException
+	 */
+	public static function Pdf2Images($pdf, $path, $fileName, $picExtension = 'png')
+    {
+		$picsPath = [];
+		if (!extension_loaded('imagick')) {
+			return $picsPath;
+		}
+		if (!file_exists($pdf)) {
+			return $picsPath;
+		}
+		// 文件夹不存在，则创建
+		if(!is_dir($path)) {
+			@mkdir($path, 0777, true);
+		}
+		$im = new \Imagick();
+		$im->setResolution(120, 120); //设置分辨率 值越大分辨率越高
+		$im->setCompressionQuality(100);
+		$im->readImage($pdf);
+
+		$canvas = new \Imagick();
+        foreach ($im as $k => $sub) {
+            $sub->setImageFormat($picExtension);
+			//$sub->setResolution(120, 120);
+			//$sub->stripImage();
+            //$sub->trimImage(0);
+            $width  = $sub->getImageWidth();
+            $height = $sub->getImageHeight();
+
+            $canvas->newImage($width, $height, new \ImagickPixel('white'));
+            $canvas->compositeImage($sub, \Imagick::COMPOSITE_DEFAULT, 5, 5);
+			$picPath = sprintf('%s%s.%s', $path, $fileName.$k, $picExtension);
+			
+			$canvas->appendImages(true)->writeImage($picPath);
+			$picsPath[] = $picPath;
+        }
+
+		return $picsPath;
+	}
+	
+	/**
+	 * 将pdf转化为多张图片	
+	 *
+	 * @param string $pdf  pdf所在路径 （/www/pdf/abc.pdf pdf所在的绝对路径）
+	 * @param string $path 新生成图片所在路径 (/www/pngs/)
+	 *
+	 * @param string $picExtension
+	 *
+	 * @return string
+	 * @throws \ImagickException
+	 */
+	public static function Pdf2Image($pdf, $path, $fileName, $picExtension = 'png')
+    {
+		$picsPath = [];
+		if (!extension_loaded('imagick')) {
+			return picsPath;
+		}
+		if (!file_exists($pdf)) {
+			return picsPath;
+		}
+		// 文件夹不存在，则创建
+		if(!is_dir($path)) {
+			@mkdir($path, 0777, true);
+		}
+
+        $im = new \Imagick();
+        $im->setCompressionQuality(100);
+        $im->setResolution(120, 120);//设置分辨率 值越大分辨率越高
+        $im->readImage($pdf);
+
+		$picsPath = [];
+        $canvas = new \Imagick();
+		$imgNum = $im->getNumberImages();
+		
+		foreach ($im as $k => $sub) {
+            $sub->setImageFormat($picExtension);
+            //$sub->setResolution(120, 120);
+            $sub->stripImage();
+            $sub->trimImage(0);
+            $width  = $sub->getImageWidth() + 10;
+            $height = $sub->getImageHeight() + 30;
+            if ($k + 1 == $imgNum) {
+                $height += 30;
+            } //最后添加10的height
+            $canvas->newImage($width, $height, new \ImagickPixel('white'));
+            $canvas->compositeImage($sub, \Imagick::COMPOSITE_DEFAULT, 5, 5);
+        }
+ 
+        $canvas->resetIterator();
+		$picPath = sprintf('%s%s.%s', $path, $fileName, $picExtension);
+		
+		$canvas->appendImages(true)->writeImage($picPath);
+		$picsPath[] = $picPath;
+
+        return $picsPath;
 	}
 }
 ?>

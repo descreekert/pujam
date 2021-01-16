@@ -516,6 +516,13 @@ class GoodsService
                     $v['images'] = ResourcesService::AttachmentPathViewHandle($v['images']);
                 }
 
+                // 文件
+                if(isset($v['file']))
+                {
+                    $v['file_old'] = $v['file'];
+                    $v['file'] = ResourcesService::AttachmentPathViewHandle($v['file']);
+                }
+
                 // 音频
                 if(isset($v['audio']))
                 {
@@ -1053,7 +1060,7 @@ class GoodsService
         }
 
         // 其它附件
-        $data_fields = ['images', 'video', 'audio'];
+        $data_fields = ['images', 'video', 'audio', 'file'];
         $attachment = ResourcesService::AttachmentParams($params, $data_fields);
         if($attachment['code'] != 0)
         {
@@ -1088,6 +1095,7 @@ class GoodsService
             'is_home_recommended'       => isset($params['is_home_recommended']) ? intval($params['is_home_recommended']) : 0,
             'images'                    => $images,
             'brand_id'                  => isset($params['brand_id']) ? intval($params['brand_id']) : 0,
+            'file'                      => $attachment['data']['file'],
             'audio'                     => $attachment['data']['audio'],
             'video'                     => $attachment['data']['video'],
             'seo_title'                 => empty($params['seo_title']) ? '' : $params['seo_title'],
@@ -1498,17 +1506,33 @@ class GoodsService
      */
     public static function GetFormGoodsPhotoParams($params = [])
     {
-        if(empty($params['photo']))
+        // 如果文件和相册均为空
+        if(empty($params['photo']) && empty($params['file']))
         {
-            return DataReturn('请上传相册', -1);
+            return DataReturn('请上传文件或相册', -1);
         }
 
         $result = [];
-        if(!empty($params['photo']) && is_array($params['photo']))
+        // 如果相册为空，但文件存在
+        if(empty($params['photo']) && !empty($params['file']))
         {
-            foreach($params['photo'] as $v)
+            // 根据文件生成相册
+            $file = $params['file'];
+            $ret = ResourcesService::AttachmentPDFToImg($file, "goods");
+            if($ret['code'] != 0)
             {
-                $result[] = ResourcesService::AttachmentPathHandle($v);
+                return DataReturn($ret['msg'], -1);
+                
+            } else {
+                $result = $ret['data'];
+            }
+        } else {
+            if(!empty($params['photo']) && is_array($params['photo']))
+            {
+                foreach($params['photo'] as $v)
+                {
+                    $result[] = ResourcesService::AttachmentPathHandle($v);
+                }
             }
         }
         return DataReturn('success', 0, $result);

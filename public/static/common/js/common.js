@@ -2601,9 +2601,11 @@ $(function()
 
 	                    var index = parseInt($tag.find('li').length) || 0;
 	                    var html = '<li>';
-	                        html += '<input type="text" name="'+form_name+'['+index+'][title]" value="'+result[i].title+'" />';
-	                        html += '<input type="text" name="'+form_name+'['+index+'][url]" value="'+result[i].url+'" />';
-	                        html += '<a href="'+result[i].url+'" title="'+result[i].title+'" target="_blank">'+result[i].title+'</a>';
+	                        //html += '<input type="text" name="'+form_name+'['+index+'][title]" value="'+result[i].title+'" />';
+							//html += '<input type="text" name="'+form_name+'['+index+'][url]" value="'+result[i].url+'" />';
+							icon = '<img src="public/static/common/lib/ueditor/dialogs/attachment/fileTypeImages/icon_pdf.gif"/>';
+							html += '<input type="text" name="'+form_name+'" value="'+result[i].url+'" />';
+	                        html += '<a href="'+result[i].url+'" title="'+result[i].title+'" target="_blank">'+icon + result[i].title+'</a>';
 	                        if(is_delete == 1)
 	                        {
 	                        	html += '<i>×</i>';
