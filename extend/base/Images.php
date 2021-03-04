@@ -512,7 +512,7 @@ class Images
 		}
 
 		/* 添加文字水印 */
-		self::ImageWaterText($dst_im);
+		// self::ImageWaterText($dst_im);
 
 	    /* 保存新图片 */
 		switch($type)
