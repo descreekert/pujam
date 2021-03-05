@@ -10,6 +10,7 @@ ul { list-style: none; }
 .float-right { float:right !important;}
 .margin-left-0 { margin-left: 0 !important}
 .height-auto {height:auto !important; min-height: auto !important;}
+.z-index-top {z-index: 10000;}
 
 /* 没数据 */
 .table-no {text-align:center;padding:115px 0;background:#FFF !important;color: #888; }
