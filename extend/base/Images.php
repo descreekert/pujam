@@ -476,7 +476,7 @@ class Images
 		list($w, $h) = getimagesize($org_file);
 		
 		/* 尺寸计算 */
-		$percent = 0.5;
+		$percent = 0.36;
 		if($width > 0) {
 			$width = ($w > $width) ? $width : $w;
 		} else {
@@ -485,8 +485,8 @@ class Images
 		if($height > 0) {
 			$height = ($h > $height) ? $height : $h;
 		} else {
-			// $height = $h * $percent;
-			$height = $width;
+			$height = $h * $percent;
+			// $height = $width;
 		}
 	
 		/* url创建一个新图象 */
@@ -512,7 +512,7 @@ class Images
 		}
 
 		/* 添加文字水印 */
-		// self::ImageWaterText($dst_im);
+		self::ImageWaterText($dst_im);
 
 	    /* 保存新图片 */
 		switch($type)
@@ -547,20 +547,22 @@ class Images
 		// 字体文件
 		$font_file = GetDocumentRoot() . __MY_ROOT_PUBLIC__.'static/common/typeface/Alibaba-PuHuiTi-Regular.ttf';
 		// 水印文字
-		$text = empty($text) ? MyC('home_site_name')."预览图|Preview" : $text;
+		$text = empty($text) ? __MY_URL__ : $text;
 		// 字体大小
-		$font_size = 30;
+		$font_size = 12;
 		// 水印文字旋转角度
-		$text_angle = 45;
+		$text_angle = 0;
 
 		// 水印位置
 		$box = @imageTTFBbox($font_size,$text_angle,$font_file,$text);
 		$width = abs($box[4] - $box[0]);
 		$heigth = abs($box[5] - $box[1]);
-		$x = @imagesx($image)/2 -$width/2;
-		$y = @imagesy($image)/2 +$heigth/2;
+		//$x = @imagesx($image)/2 -$width/2;
+		//$y = @imagesy($image)/2 +$heigth/2;
+		$x = @imagesx($image) - $width - 10;
+		$y = $heigth + 10;
 		// 水印颜色
-		$text_color = imagecolorallocatealpha($image, 0, 0, 255, 75); 
+		$text_color = imagecolorallocatealpha($image, 155, 155, 255, 115); 
 
 		imagettftext($image, $font_size, $text_angle, $x, $y, $text_color, $font_file, $text);
 
