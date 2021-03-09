@@ -12,6 +12,18 @@
 function ParametersItemHtmlCreated(type, name, value)
 {
     var index = parseInt(Math.random()*1000001);
+    var valueHtml = '';
+    if(value.length > 2 && value.startsWith('[') && value.endsWith(']')) {
+        valueHtml += '<select name="parameters_value[]" class="am-radius chosen-select" data-validation-message="请选择参数值">';
+        valueHtml += '<option value="0">无</option>';
+        var vs = value.slice(1, -1).split(',');
+        for(var i=0; i<vs.length; i++) {
+            valueHtml += '<option value="'+ (i+1) +'" >'+ vs[i] +'</option>';
+        }
+        valueHtml += '</select>';
+    } else {
+        valueHtml = '<input type="text" name="parameters_value[]" placeholder="参数值" value="'+(value || '')+'" maxlength="200" data-validation-message="请填写参数值" />';
+    }
     var html = '<tr class="parameters-line-'+index+'">';
         html += '<td class="am-text-middle">';
         html += '<select name="parameters_type[]" class="am-radius chosen-select" data-validation-message="请选择商品参数展示类型">';
@@ -24,7 +36,7 @@ function ParametersItemHtmlCreated(type, name, value)
         html += '<input type="text" name="parameters_name[]" placeholder="参数名称" value="'+(name || '')+'" data-validation-message="请填写参数名称" maxlength="160" required />';
         html += '</td>';
         html += '<td class="am-text-middle">';
-        html += '<input type="text" name="parameters_value[]" placeholder="参数值" value="'+(value || '')+'" maxlength="200" data-validation-message="请填写参数值" />';
+        html += valueHtml;
         html += '</td>';
         html += '<td class="am-text-middle">';
         html += '<span class="am-text-xs cr-blue c-p am-margin-right-sm line-move" data-type="top">上移</span>';
