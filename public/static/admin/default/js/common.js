@@ -12,28 +12,33 @@
 function ParametersItemHtmlCreated(type, name, value)
 {
     var index = parseInt(Math.random()*1000001);
+    var typeHtml = 'parameters_type';
+    var nameHtml = 'parameters_name';
     var valueHtml = '';
     if(value.length > 2 && value.startsWith('[') && value.endsWith(']')) {
-        valueHtml += '<select name="parameters_value[]" class="am-radius chosen-select" data-validation-message="请选择参数值">';
+        typeHtml = 'parameters_type1';
+        nameHtml = 'parameters_name1';
+        valueHtml += '<select name="parameters_value1[]" class="am-radius chosen-select" data-validation-message="请选择参数值">';
         valueHtml += '<option value="暂无">暂无</option>';
         var vs = value.slice(1, -1).split(',');
         for(var i=0; i<vs.length; i++) {
             valueHtml += '<option value="'+ vs[i] +'" >'+ vs[i] +'</option>';
         }
         valueHtml += '</select>';
+
     } else {
         valueHtml = '<input type="text" name="parameters_value[]" placeholder="参数值" value="'+(value || '')+'" maxlength="200" data-validation-message="请填写参数值" />';
     }
     var html = '<tr class="parameters-line-'+index+'">';
         html += '<td class="am-text-middle">';
-        html += '<select name="parameters_type[]" class="am-radius chosen-select" data-validation-message="请选择商品参数展示类型">';
+        html += '<select name="'+typeHtml+'[]" class="am-radius chosen-select" data-validation-message="请选择商品参数展示类型">';
         html += '<option value="0" '+(type == 0 ? 'selected' : '')+'>全部</option>';
         html += '<option value="1" '+(type == 1 || type == undefined ? 'selected' : '')+'>详情</option>';
         html += '<option value="2" '+(type == 2 ? 'selected' : '')+'>基础</option>';
         html += '</select>';
         html += '</td>';
         html += '<td class="am-text-middle">';
-        html += '<input type="text" name="parameters_name[]" placeholder="参数名称" value="'+(name || '')+'" data-validation-message="请填写参数名称" maxlength="160" required />';
+        html += '<input type="text" name="'+nameHtml+'[]" placeholder="参数名称" value="'+(name || '')+'" data-validation-message="请填写参数名称" maxlength="160" required />';
         html += '</td>';
         html += '<td class="am-text-middle">';
         html += valueHtml;

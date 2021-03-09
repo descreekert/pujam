@@ -295,10 +295,10 @@ class GoodsParamsTemplateService
      */
     public static function GoodsParamsTemplateHandle($params = [])
     {
+        $data = [];
         // 展示范围、参数名称、参数值
         if(!empty($params['parameters_type']) && !empty($params['parameters_name']) && !empty($params['parameters_value']) && is_array($params['parameters_type']) && is_array($params['parameters_name']) && is_array($params['parameters_value']))
         {
-            $data = [];
             foreach($params['parameters_type'] as $k=>$v)
             {
                 if(isset($params['parameters_name'][$k]) && isset($params['parameters_value'][$k]))
@@ -309,11 +309,28 @@ class GoodsParamsTemplateService
                         'value' => $params['parameters_value'][$k],
                     ];
                 }
-            }
-            if(!empty($data))
+            }   
+        }
+
+        if(!empty($params['parameters_type1']) && !empty($params['parameters_name1']) && !empty($params['parameters_value1']) 
+          && is_array($params['parameters_type1']) && is_array($params['parameters_name1']) && is_array($params['parameters_value1']))
+        {
+            foreach($params['parameters_type1'] as $k=>$v)
             {
-                return DataReturn('处理成功', 0, $data);
-            }
+                if(isset($params['parameters_name1'][$k]) && isset($params['parameters_value1'][$k]))
+                {
+                    $data[] = [
+                        'type'  => $v,
+                        'name'  => $params['parameters_name1'][$k],
+                        'value' => $params['parameters_value1'][$k],
+                    ];
+                }
+            }   
+        }
+
+        if(!empty($data))
+        {
+            return DataReturn('处理成功', 0, $data);
         }
         return DataReturn('请填写参数配置', -1);
     }
