@@ -15,10 +15,10 @@ function ParametersItemHtmlCreated(type, name, value)
     var valueHtml = '';
     if(value.length > 2 && value.startsWith('[') && value.endsWith(']')) {
         valueHtml += '<select name="parameters_value[]" class="am-radius chosen-select" data-validation-message="请选择参数值">';
-        valueHtml += '<option value="0">无</option>';
+        valueHtml += '<option value="暂无">暂无</option>';
         var vs = value.slice(1, -1).split(',');
         for(var i=0; i<vs.length; i++) {
-            valueHtml += '<option value="'+ (i+1) +'" >'+ vs[i] +'</option>';
+            valueHtml += '<option value="'+ vs[i] +'" >'+ vs[i] +'</option>';
         }
         valueHtml += '</select>';
     } else {
