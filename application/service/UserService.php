@@ -821,7 +821,8 @@ class UserService
             // 短信
             case 'sms' :
                 $data['mobile'] = $params['accounts'];
-                $obj = new \base\Sms($verify_params);
+                //$obj = new \base\Sms($verify_params);
+                $obj = new \base\SmsTencent($verify_params);
                 break;
 
             // 邮箱
@@ -1056,7 +1057,8 @@ class UserService
         {
             // 短信
             case 'sms' :
-                $obj = new \base\Sms($verify_params);
+                // $obj = new \base\Sms($verify_params);
+                $obj = new \base\SmsTencent($verify_params);
                 $status = $obj->SendCode($params['accounts'], $code, MyC('home_sms_user_reg'));
                 break;
 
@@ -1140,7 +1142,8 @@ class UserService
         {
             // 手机
             case 'mobile' :
-                $obj = new \base\Sms($verify_params);
+                // $obj = new \base\Sms($verify_params);
+                $obj = new \base\SmsTencent($verify_params);
                 $status = $obj->SendCode($params['accounts'], $code, MyC('home_sms_user_forget_pwd'));
                 break;
 
@@ -1256,7 +1259,8 @@ class UserService
         {
             // 手机
             case 'mobile' :
-                $obj = new \base\Sms($verify_params);
+                // $obj = new \base\Sms($verify_params);
+                $obj = new \base\SmsTencent($verify_params);
                 break;
 
             // 邮箱
@@ -1730,7 +1734,8 @@ class UserService
             'key_prefix' => 'bind_'.md5($params['mobile']),
             'expire_time' => MyC('common_verify_expire_time')
         ];
-        $obj = new \base\Sms($verify_params);
+        // $obj = new \base\Sms($verify_params);
+        $obj = new \base\SmsTencent($verify_params);
 
         // 是否已过期
         if(!$obj->CheckExpire())
@@ -1884,7 +1889,8 @@ class UserService
         ];
 
         // 发送验证码
-        $obj = new \base\Sms($verify_params);
+        // $obj = new \base\Sms($verify_params);
+        $obj = new \base\SmsTencent($verify_params);
         $code = GetNumberCode(4);
         $status = $obj->SendCode($params['mobile'], $code, MyC('home_sms_user_mobile_binding'));
         
