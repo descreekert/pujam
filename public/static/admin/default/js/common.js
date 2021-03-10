@@ -15,7 +15,7 @@ function ParametersItemHtmlCreated(type, name, value)
     var typeHtml = 'parameters_type';
     var nameHtml = 'parameters_name';
     var valueHtml = '';
-    if(value.length > 2 && value.startsWith('[') && value.endsWith(']')) {
+    if(value && value.length && value.length > 2 && value.startsWith('[') && value.endsWith(']')) {
         typeHtml = 'parameters_type1';
         nameHtml = 'parameters_name1';
         valueHtml += '<select name="parameters_value1[]" class="am-radius chosen-select" data-validation-message="请选择参数值">';
