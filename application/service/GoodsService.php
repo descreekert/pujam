@@ -2584,8 +2584,8 @@ class GoodsService
      */
     public static function GoodImagePreviewHandle($goods_id = 0, $url, $user = [], $price=0, $is_admin = false)
     {
-        // 若售价为0元（免费）或当前为管理员，则显示原图
-        if(!$is_admin && $price >0) {
+        // 若售价为0元（免费）且用户已经登录或当前为管理员，则显示原图
+        if((!$is_admin && $price >0) || empty($user)) {
             // 判断当前用户是否已购买产品
             $ret = [];
             if(!empty($user)) {
@@ -2593,7 +2593,7 @@ class GoodsService
                 $ret = self::UserGoodsOwned($goods_id, $user['id']);
             }
 
-            // 未购买，则显示预览图
+            // 未购买或未登录，则显示预览图
             if(empty($ret)) {
                 $preview_url = Db::name('AttachmentPreview')->where(['original_url'=>$url])->value('preview_url');
                 $url = isset($preview_url) ? $preview_url : $url;
