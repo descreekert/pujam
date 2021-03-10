@@ -11,3 +11,4 @@ nginx.htaccess
 *payment_*_notify.php
 .vscode/launch.json
 .gitignore
+public/static/upload
