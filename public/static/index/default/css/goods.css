@@ -490,6 +490,20 @@ flex: 1 1 0%;line-height: 16px;cursor: pointer;}
     font-size: 36px;
 }
 
+.goods_detail_h1_noborder {
+    white-space: normal; 
+    font-size: 32px; 
+    color: rgb(227, 108, 9); 
+    font-family: 楷体, 楷体_GB2312, SimKai; 
+    font-size: 36px;
+}
+
+.goods_detail_h2 {
+    color: #ff0000; 
+    font-family: 楷体, 楷体_GB2312, SimKai; 
+    font-size: 18px;
+}
+
 .content-file a {
     line-height: 16px; 
     font-size:14px; 

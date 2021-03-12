@@ -3,8 +3,13 @@
  */
 *{ outline:none !important; }
 ul { list-style: none; }
+hr {   
+    border-top: 2px solid rgb(204, 204, 204); 
+    margin : 2px;
+}
 .none { display:none !important; }
 .block { display:block !important; }
+.inline { display:inline !important; }
 .width-full { width:100% !important; max-width: 100% !important;}
 .position-relative { position:relative !important;}
 .float-right { float:right !important;}

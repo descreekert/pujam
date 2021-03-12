@@ -592,7 +592,7 @@
                                 <div class="content-video">
                                     <iframe src="{{$goods.video}}" width="100%" height="600" scrolling="no" frameborder="0"></iframe>
                                 </div>
-                            {{/if}}fgo
+                            {{/if}}
                             
                             <!-- 相册 -->
                             {{if (isset($is_user_goods_owned) and $is_user_goods_owned eq 1) or ($goods.price eq 0 and !empty($user))}}
@@ -627,7 +627,9 @@
 
                             <!-- web详情 -->
                             <div class="content-web am-scrollable-horizontal">
-                                <h1 class="goods_detail_h1">详情说明</h1>
+                                <hr>
+                                <h1 class="goods_detail_h1_noborder inline">详情说明</h1><h2 class="goods_detail_h2 inline">&nbsp;&nbsp;购买后可以阅读和下载完整曲谱(免费曲谱注册登录即可)。</h2>
+                                <hr>
                                 {{$goods.content_web|raw}}
                             </div>
                             
