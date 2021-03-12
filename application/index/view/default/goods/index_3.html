@@ -634,7 +634,7 @@
                             </div>
                             
                             <!-- 下载地址 -->
-                            {{if (isset($is_user_goods_owned) and $is_user_goods_owned eq 1) or $goods.price eq 0 }}
+                            {{if (isset($is_user_goods_owned) and $is_user_goods_owned eq 1) or ($goods.price eq 0 and !empty($user)) }}
                                 {{if !empty($goods.file)}}
                                     <div class="content-file">
                                         <h1 class="goods_detail_h1">下载地址</h1>
